@@ -33,7 +33,8 @@ This will show the usage:
 
 ```  
 usage: conllu-to-conll.py [-h] --input INPUT --output OUTPUT  
- [--combine {train,dev,test}] [--split SPLIT] [--clean CLEAN]conllu-to-conll.py: error: the following arguments are required: --input, --output  
+ [--combine {train,dev,test}] [--split SPLIT] [--clean CLEAN]
+conllu-to-conll.py: error: the following arguments are required: --input, --output  
 ```  
 
 ### Note
