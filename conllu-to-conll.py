@@ -15,7 +15,7 @@ def main():
     arguments_parser.add_argument('--input', type=str, required=True, help='Conllu files folder')
     arguments_parser.add_argument('--output', type=str, required=True, help='Conll files folder')
     arguments_parser.add_argument('--combine', choices=['train', 'dev', 'test'], default=None, required=False,
-                                  help='Combine multiple files from one phase (train, development or test) into one file')
+                                  help='Combine multiple files from one phase (train, validation or test) into one file')
     arguments_parser.add_argument('--split', type=bool, default=False, required=False,
                                   help='In case there is no validation file (dev), the training file (train) is split in two with a '
                                        'random 80-20 ratio')
