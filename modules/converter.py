@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import List
 
 
-def walk_directories_convert(input_path: Path, output_path: Path) -> None:
+def walk_directories(input_path: Path, output_path: Path) -> None:
     print("INFO: Browsing through directories to convert")
 
     input_path_name = input_path.name
@@ -47,8 +47,7 @@ def convert_file(input_file, output_file) -> None:
     print(f"INFO: Converting {input_file} file to {output_file} file")
 
     with open(input_file, 'r') as conllu, open(output_file, 'w') as conll:
-        lines = conllu.readlines()
-        for line in lines:
+        for line in conllu:
             tuples = line.split()
             if len(tuples) == 10 and tuples[0] != '#' and '.' not in tuples[0] and '-' not in tuples[0]:
                 tuples[8] = tuples[9] = '_'

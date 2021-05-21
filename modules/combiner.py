@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any, List
 
 
-def walk_directories_combine(input_path: Path, output_path: Path, type_files_join: Any) -> None:
+def walk_directories(input_path: Path, output_path: Path, type_files_join: Any) -> None:
     print("INFO: Browsing through directories to combine")
 
     input_path_name = input_path.name

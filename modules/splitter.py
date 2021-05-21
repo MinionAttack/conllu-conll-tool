@@ -7,7 +7,7 @@ from random import sample
 from typing import List, Tuple
 
 
-def walk_directories_split(input_path: Path, output_path: Path) -> None:
+def walk_directories(input_path: Path, output_path: Path) -> None:
     print("INFO: Browsing through directories to split")
 
     input_path_name = input_path.name
