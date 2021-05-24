@@ -23,7 +23,8 @@ def walk_directories(input_path: Path, output_path: Path, type_files_join: Any) 
             files_root_folder.append(item)
         else:
             continue
-    files_to_combine.append(files_root_folder)
+    if files_root_folder:
+        files_to_combine.append(files_root_folder)
 
     combine_files(type_files_join, files_to_combine, input_path_name, output_path)
 
