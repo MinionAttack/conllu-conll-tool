@@ -41,13 +41,17 @@ def clean_files(files: List[Path], input_path_name: str, output_path: Path) -> N
 def clean_file(input_file: Path, output_file: Path) -> None:
     print(f"INFO: Cleaning {input_file} file to {output_file} file")
 
-    with open(input_file, 'r') as dirty, open(output_file, 'w') as clean:
-        for line in dirty:
-            tuples = line.split()
-            if len(tuples) == 2 and is_a_number(tuples[0]) and is_a_number(tuples[1]):
-                continue
-            else:
-                clean.write(line)
+    # UD embeddings are in iso-8859-1 (latin1)
+    with open(input_file, 'r', encoding='iso-8859-1') as dirty, open(output_file, 'w', encoding='iso-8859-1') as clean:
+        try:
+            for line in dirty:
+                tuples = line.split()
+                if len(tuples) == 2 and is_a_number(tuples[0]) and is_a_number(tuples[1]):
+                    continue
+                else:
+                    clean.write(line)
+        except UnicodeDecodeError as error:
+            print(f"ERROR: Unable to clean {input_file} file, {error.encoding} - {error.reason}")
 
 
 def is_a_number(number: str) -> bool:
