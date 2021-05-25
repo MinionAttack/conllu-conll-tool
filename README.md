@@ -14,16 +14,21 @@ Table of contents.
 
 This is a tool to convert *CoNLL-U* format files to *CoNLL* format files and manipulate training, validation and test sets.
 
-This script has four features:
+This script has five features:
 
 1. Convert files in *CoNLL-U* format to *CoNLL* format.
 2. Combine several files of a given training phase into one file.
 3. Split a training phase file into two files, one file for the training phase and one file for the validation phase.
 4. Clean up an embeddings file to remove the first line containing the number of words and the size of the vector.
+5. Add a tag and its dimension for unknown words in the embedding file.
 
 **It is important to note that the script uses the _output_ folder as the base directory for both input and output files.**
 
 ## How to use
+
+Install the necessary dependencies listed in the `requirements.txt` file.
+
+`$ pip3 install -r requirements.txt`
 
 To run the script, from a terminal in the root directory, type:
 
@@ -32,9 +37,10 @@ To run the script, from a terminal in the root directory, type:
 This will show the usage:
 
 ```  
-usage: conllu-to-conll.py [-h] --input INPUT --output OUTPUT  
- [--combine {train,dev,test}] [--split SPLIT] [--clean CLEAN]
-conllu-to-conll.py: error: the following arguments are required: --input, --output  
+usage: conllu-to-conll.py [-h] --input INPUT [--output OUTPUT]
+                          [--combine {train,dev,test}] [--split SPLIT]
+                          [--clean CLEAN] [--unknown UNKNOWN UNKNOWN]
+conllu-to-conll.py: error: the following arguments are required: --input  
 ```  
 
 ### Note
@@ -52,7 +58,7 @@ Run the script again.
 `$ ./conllu-to-conll.py --input conllu --output conll`
 
 - **conllu**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files to be converted are located.
-    - You can put the files directly or if you want to convert several languages you can put the files in different folders (one for each language), but be aware that the script does not process more than one level of subdirectories.
+  - You can put the files directly or if you want to convert several languages you can put the files in different folders (one for each language), but be aware that the script does not process more than one level of subdirectories.
 - **conll**: Directory (must have been created) inside the *output* folder where the converted *CoNLL* files shall be generated.
 
 ### 2. Combine files
@@ -60,7 +66,7 @@ Run the script again.
 `$ ./conllu-to-conll.py --input conllu --output combined --combine train`
 
 - **conllu**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files to be combined are located.
-    - You can put the files directly or if you want to combine several languages you can put the files in different folders (one for each language), but be aware that the script does not process more than one level of subdirectories.
+  - You can put the files directly or if you want to combine several languages you can put the files in different folders (one for each language), but be aware that the script does not process more than one level of subdirectories.
 - **combined**: Directory (must have been created) inside the *output* folder where the combined *CoNLL-U* files shall be generated.
 - **train**: The type of files to combine. This can be one of the following values: `train`, `dev` or `test`.
 
@@ -69,8 +75,8 @@ Run the script again.
 `$ ./conllu-to-conll.py --input conllu --output splitted --split true`
 
 - **conllu**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files to be splitted are located.
-    - You can put the files directly or if you want to split several languages you can put the files in different folders (one for each language), but be aware that the script does not process more than one level of subdirectories.
-    - Unless the code is modified, the split is **80% for the training phase** and **20% for the validation phase**.
+  - You can put the files directly or if you want to split several languages you can put the files in different folders (one for each language), but be aware that the script does not process more than one level of subdirectories.
+  - Unless the code is modified, the split is **80% for the training phase** and **20% for the validation phase**.
 - **splitted**: Directory (must have been created) inside the *output* folder where the splitted (*train* and *dev*) *CoNLL-U* files shall be generated.
 - **true**: To do the split, the default value is set to *false*.
 
@@ -79,9 +85,18 @@ Run the script again.
 `$ ./conllu-to-conll.py --input embeddings --output cleaned --clean true`
 
 - **embeddings**: Directory (must have been created) inside the *output* folder where the embedding files to be cleaned are located.
-    - You can put the files directly or if you want to clean several languages you can put the files in different folders (one for each language), but be aware that the script does not process more than one level of subdirectories.
+  - You can put the files directly or if you want to clean several languages you can put the files in different folders (one for each language), but be aware that the script does not process more than one level of subdirectories.
 - **cleaned**: Directory (must have been created) inside the *output* folder where the splitted (*train* and *dev*) *CoNLL-U* files shall be generated.
 - **true**: To do the cleaning, the default value is set to *false*.
+
+### 5. Fill in files
+
+`$ ./conllu-to-conll.py --input fill -unknown unk 100`
+
+- **fill**: Directory (must have been created) inside the *output* folder where the embedding files to be filled in are located.
+  - You can put the files directly or if you want to clean several languages you can put the files in different folders (one for each language), but be aware that the script does not process more than one level of subdirectories.
+- **unk**: Name of the tag to attach to the embeddings file.
+- **100**: The vector dimension for the tag.
 
 ## Licensing agreement
 
