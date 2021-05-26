@@ -4,7 +4,7 @@
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 
-from modules import combiner, splitter, converter, cleaner, filler
+from modules import combiner, splitter, converter, cleaner, filler, generator
 
 BASE_PATH = "output"
 
@@ -24,6 +24,9 @@ def main():
     arguments_parser.add_argument('--unknown', nargs=2, required=False,
                                   help='Add a label (with the given name) for unknown words with random values, using a fixed seed for '
                                        'the given dimension.')
+    arguments_parser.add_argument('--generate', type=int, required=False,
+                                  help='Generates a random embeddings file with the specified dimension from the training and validation '
+                                       'file.')
 
     arguments = arguments_parser.parse_args()
     process_arguments(arguments)
@@ -38,6 +41,7 @@ def process_arguments(arguments: Namespace) -> None:
     split_train_file = arguments.split
     clean_embedding_file = arguments.clean
     unknown_values = arguments.unknown
+    generate_value = arguments.generate
 
     input_path = Path(BASE_PATH).joinpath(input_folder)
     if output_folder is not None:
@@ -50,6 +54,8 @@ def process_arguments(arguments: Namespace) -> None:
                 splitter.walk_directories(input_path, output_path)
             elif clean_embedding_file:
                 cleaner.walk_directories(input_path, output_path)
+            elif generate_value is not None:
+                generator.walk_directories(input_path, output_path, generate_value)
             else:
                 converter.walk_directories(input_path, output_path)
         else:

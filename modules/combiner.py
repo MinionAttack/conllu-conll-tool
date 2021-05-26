@@ -18,7 +18,8 @@ def walk_directories(input_path: Path, output_path: Path, type_files_join: Any) 
             for element in item.iterdir():
                 if element.is_file() and valid_file_combine(element.name, type_files_join):
                     directory_group.append(element)
-            files_to_combine.append(directory_group)
+            if directory_group:
+                files_to_combine.append(directory_group)
         elif item.is_file() and not item.name.startswith('.') and valid_file_combine(item.name, type_files_join):
             files_root_folder.append(item)
         else:
