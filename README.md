@@ -14,7 +14,7 @@ Table of contents.
 
 This is a tool to convert *CoNLL-U* format files to *CoNLL* format files and manipulate training, validation and test sets.
 
-This script has five features:
+This script has six features:
 
 1. Convert files in *CoNLL-U* format to *CoNLL* format.
 2. Combine several files of a given training phase into one file.
