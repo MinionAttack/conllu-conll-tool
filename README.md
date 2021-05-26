@@ -91,8 +91,7 @@ Run the script again.
 - **embeddings**: Directory (must have been created) inside the *output* folder where the embedding files to be cleaned are located.
   - You can put the files directly or if you want to clean several languages you can put the files in different folders (one for each
     language), but be aware that the script does not process more than one level of subdirectories.
-- **cleaned**: Directory (must have been created) inside the *output* folder where the splitted (*train* and *dev*) *CoNLL-U* files shall be
-  generated.
+- **cleaned**: Directory (must have been created) inside the *output* folder where the cleaned embedding files shall be generated.
 - **true**: To do the cleaning, the default value is set to *false*.
 
 ### 5. Fill in files
