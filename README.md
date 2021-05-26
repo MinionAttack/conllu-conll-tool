@@ -62,16 +62,18 @@ Run the script again.
 `$ ./conllu-to-conll.py --input conllu --output conll`
 
 - **conllu**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files to be converted are located.
-  - You can put the files directly or if you want to convert several languages you can put the files in different folders (one for each language), but be aware that the script does not process more than one level of subdirectories.
-- **conll**: Directory (must have been created) inside the *output* folder where the converted *CoNLL* files shall be generated.
+  - You can put the files directly or if you want to convert several languages you can put the files in different folders (one for each
+    language), but be aware that the script does not process more than one level of subdirectories.
+- **conll**: Directory (must have been created) inside the *output* folder where the converted *CoNLL* files shall be created.
 
 ### 2. Combine files
 
 `$ ./conllu-to-conll.py --input conllu --output combined --combine train`
 
 - **conllu**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files to be combined are located.
-  - You can put the files directly or if you want to combine several languages you can put the files in different folders (one for each language), but be aware that the script does not process more than one level of subdirectories.
-- **combined**: Directory (must have been created) inside the *output* folder where the combined *CoNLL-U* files shall be generated.
+  - You can put the files directly or if you want to combine several languages you can put the files in different folders (one for each
+    language), but be aware that the script does not process more than one level of subdirectories.
+- **combined**: Directory (must have been created) inside the *output* folder where the combined *CoNLL-U* files shall be created.
 - **train**: The type of files to combine. This can be one of the following values: `train`, `dev` or `test`.
 
 ### 3. Split files
@@ -79,9 +81,11 @@ Run the script again.
 `$ ./conllu-to-conll.py --input conllu --output splitted --split true`
 
 - **conllu**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files to be splitted are located.
-  - You can put the files directly or if you want to split several languages you can put the files in different folders (one for each language), but be aware that the script does not process more than one level of subdirectories.
+  - You can put the files directly or if you want to split several languages you can put the files in different folders (one for each
+    language), but be aware that the script does not process more than one level of subdirectories.
   - Unless the code is modified, the split is **80% for the training phase** and **20% for the validation phase**.
-- **splitted**: Directory (must have been created) inside the *output* folder where the splitted (*train* and *dev*) *CoNLL-U* files shall be generated.
+- **splitted**: Directory (must have been created) inside the *output* folder where the splitted (*train* and *dev*) *CoNLL-U* files shall
+  be created.
 - **true**: To do the split, the default value is set to *false*.
 
 ### 4. Clean up files
@@ -91,7 +95,7 @@ Run the script again.
 - **embeddings**: Directory (must have been created) inside the *output* folder where the embedding files to be cleaned are located.
   - You can put the files directly or if you want to clean several languages you can put the files in different folders (one for each
     language), but be aware that the script does not process more than one level of subdirectories.
-- **cleaned**: Directory (must have been created) inside the *output* folder where the cleaned embedding files shall be generated.
+- **cleaned**: Directory (must have been created) inside the *output* folder where the cleaned embedding files shall be created.
 - **true**: To do the cleaning, the default value is set to *false*.
 
 ### 5. Fill in files
@@ -112,7 +116,7 @@ Run the script again.
   the embeddings file will be generated are located.
   - You can put the files directly or if you want to generate several languages you can put the files in different folders (one for each
     language), but be aware that the script does not process more than one level of subdirectories.
-- **generated**: Directory (must have been created) inside the *output* folder where the generated embeddings file shall be generated.
+- **generated**: Directory (must have been created) inside the *output* folder where the generated embeddings file shall be created.
 - **100**: The vector dimensions for the tags.
 
 ## Licensing agreement
