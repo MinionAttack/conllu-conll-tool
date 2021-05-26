@@ -108,11 +108,11 @@ Run the script again.
 
 `$ ./conllu-to-conll.py --input no_embeddings --output generated --generate 100`
 
-- **no_embeddings**: Directory (must have been created) inside the *output* folder where the files from which the embeddings file will be
-  generated are located.
+- **no_embeddings**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files (*train* and *dev*) from which
+  the embeddings file will be generated are located.
   - You can put the files directly or if you want to generate several languages you can put the files in different folders (one for each
     language), but be aware that the script does not process more than one level of subdirectories.
-- **generated**: Directory (must have been created) inside the *output* folder where the generated embeddings files shall be generated.
+- **generated**: Directory (must have been created) inside the *output* folder where the generated embeddings file shall be generated.
 - **100**: The vector dimensions for the tags.
 
 ## Licensing agreement
