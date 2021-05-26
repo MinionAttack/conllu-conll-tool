@@ -35,8 +35,36 @@ def walk_directories(input_path: Path, fill_values: List[str]) -> None:
 def fill_files(files: List[Path], fill_values: List[str]) -> None:
     print("INFO: Filling in the files")
 
+    tag_name = fill_values[0]
     for file in files:
-        fill_file(file, fill_values)
+        has_unknown_tag = check_unknown_tag(file, tag_name)
+        if not has_unknown_tag:
+            fill_file(file, fill_values)
+        else:
+            print(f"INFO: {file} file already has the {tag_name} tag, skipping")
+
+
+def check_unknown_tag(input_file, tag_name) -> bool:
+    print(f"INFO: Checking if {input_file} file already has the {tag_name} tag")
+
+    exists = False
+    with open(input_file, 'r', encoding='iso-8859-1') as file:
+        try:
+            for line in file:
+                pieces = line.split()
+                if len(pieces) > 0:
+                    word = pieces[0]
+                    if word == tag_name:
+                        exists = True
+                        break
+                    else:
+                        continue
+                else:
+                    continue
+        except UnicodeDecodeError as error:
+            print(f"ERROR: Unable to get words from {input_file} file, {error.encoding} - {error.reason}")
+
+    return exists
 
 
 def fill_file(input_file: Path, fill_values: List[str]) -> None:
