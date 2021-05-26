@@ -20,7 +20,10 @@ This script has five features:
 2. Combine several files of a given training phase into one file.
 3. Split a training phase file into two files, one file for the training phase and one file for the validation phase.
 4. Clean up an embeddings file to remove the first line containing the number of words and the size of the vector.
-5. Add a tag and its dimension for unknown words in the embedding file.
+5. Add a tag with random values for a specific dimension for unknown words in the embedding file. A fixed seed is used to be able to
+   reproduce the experiments.
+6. Generate an embedding file with the words from the training file and the validation file with random values for a specific dimension. A
+   fixed seed is used to be able to reproduce the experiments.
 
 **It is important to note that the script uses the _output_ folder as the base directory for both input and output files.**
 
@@ -40,6 +43,7 @@ This will show the usage:
 usage: conllu-to-conll.py [-h] --input INPUT [--output OUTPUT]
                           [--combine {train,dev,test}] [--split SPLIT]
                           [--clean CLEAN] [--unknown UNKNOWN UNKNOWN]
+                          [--generate GENERATE]
 conllu-to-conll.py: error: the following arguments are required: --input  
 ```  
 
@@ -58,16 +62,18 @@ Run the script again.
 `$ ./conllu-to-conll.py --input conllu --output conll`
 
 - **conllu**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files to be converted are located.
-  - You can put the files directly or if you want to convert several languages you can put the files in different folders (one for each language), but be aware that the script does not process more than one level of subdirectories.
-- **conll**: Directory (must have been created) inside the *output* folder where the converted *CoNLL* files shall be generated.
+  - You can put the files directly or if you want to convert several languages you can put the files in different folders (one for each
+    language), but be aware that the script does not process more than one level of subdirectories.
+- **conll**: Directory (must have been created) inside the *output* folder where the converted *CoNLL* files shall be created.
 
 ### 2. Combine files
 
 `$ ./conllu-to-conll.py --input conllu --output combined --combine train`
 
 - **conllu**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files to be combined are located.
-  - You can put the files directly or if you want to combine several languages you can put the files in different folders (one for each language), but be aware that the script does not process more than one level of subdirectories.
-- **combined**: Directory (must have been created) inside the *output* folder where the combined *CoNLL-U* files shall be generated.
+  - You can put the files directly or if you want to combine several languages you can put the files in different folders (one for each
+    language), but be aware that the script does not process more than one level of subdirectories.
+- **combined**: Directory (must have been created) inside the *output* folder where the combined *CoNLL-U* files shall be created.
 - **train**: The type of files to combine. This can be one of the following values: `train`, `dev` or `test`.
 
 ### 3. Split files
@@ -75,9 +81,11 @@ Run the script again.
 `$ ./conllu-to-conll.py --input conllu --output splitted --split true`
 
 - **conllu**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files to be splitted are located.
-  - You can put the files directly or if you want to split several languages you can put the files in different folders (one for each language), but be aware that the script does not process more than one level of subdirectories.
+  - You can put the files directly or if you want to split several languages you can put the files in different folders (one for each
+    language), but be aware that the script does not process more than one level of subdirectories.
   - Unless the code is modified, the split is **80% for the training phase** and **20% for the validation phase**.
-- **splitted**: Directory (must have been created) inside the *output* folder where the splitted (*train* and *dev*) *CoNLL-U* files shall be generated.
+- **splitted**: Directory (must have been created) inside the *output* folder where the splitted (*train* and *dev*) *CoNLL-U* files shall
+  be created.
 - **true**: To do the split, the default value is set to *false*.
 
 ### 4. Clean up files
@@ -85,8 +93,9 @@ Run the script again.
 `$ ./conllu-to-conll.py --input embeddings --output cleaned --clean true`
 
 - **embeddings**: Directory (must have been created) inside the *output* folder where the embedding files to be cleaned are located.
-  - You can put the files directly or if you want to clean several languages you can put the files in different folders (one for each language), but be aware that the script does not process more than one level of subdirectories.
-- **cleaned**: Directory (must have been created) inside the *output* folder where the splitted (*train* and *dev*) *CoNLL-U* files shall be generated.
+  - You can put the files directly or if you want to clean several languages you can put the files in different folders (one for each
+    language), but be aware that the script does not process more than one level of subdirectories.
+- **cleaned**: Directory (must have been created) inside the *output* folder where the cleaned embedding files shall be created.
 - **true**: To do the cleaning, the default value is set to *false*.
 
 ### 5. Fill in files
@@ -94,9 +103,21 @@ Run the script again.
 `$ ./conllu-to-conll.py --input fill -unknown unk 100`
 
 - **fill**: Directory (must have been created) inside the *output* folder where the embedding files to be filled in are located.
-  - You can put the files directly or if you want to clean several languages you can put the files in different folders (one for each language), but be aware that the script does not process more than one level of subdirectories.
+  - You can put the files directly or if you want to fill in several languages you can put the files in different folders (one for each
+    language), but be aware that the script does not process more than one level of subdirectories.
 - **unk**: Name of the tag to attach to the embeddings file.
-- **100**: The vector dimension for the tag.
+- **100**: The vector dimensions for the tag.
+
+### 6. Generate files
+
+`$ ./conllu-to-conll.py --input no_embeddings --output generated --generate 100`
+
+- **no_embeddings**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files (*train* and *dev*) from which
+  the embeddings file will be generated are located.
+  - You can put the files directly or if you want to generate several languages you can put the files in different folders (one for each
+    language), but be aware that the script does not process more than one level of subdirectories.
+- **generated**: Directory (must have been created) inside the *output* folder where the generated embeddings file shall be created.
+- **100**: The vector dimensions for the tags.
 
 ## Licensing agreement
 
@@ -104,7 +125,10 @@ MIT License
 
 Copyright (c) 2021 Iago Alonso Alonso
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "
+Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
