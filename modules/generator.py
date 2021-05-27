@@ -75,17 +75,14 @@ def read_file(input_file: Path) -> List[str]:
     print(f"INFO: Reading {input_file.name} file")
 
     words = []
-    with open(input_file, 'r') as file:
-        try:
-            for line in file:
-                pieces = line.split()
-                if len(pieces) > 0:
-                    word = pieces[1]
-                    words.append(word)
-                else:
-                    continue
-        except UnicodeDecodeError as error:
-            print(f"ERROR: Unable to get words from {input_file} file, {error.encoding} - {error.reason}")
+    with open(input_file, 'rt', encoding='UTF-8', errors="replace") as file:
+        for line in file:
+            pieces = line.split()
+            if len(pieces) > 0:
+                word = pieces[1]
+                words.append(word)
+            else:
+                continue
 
     return words
 
@@ -109,7 +106,7 @@ def generate_vectors(words: List[str], dimension: int) -> List[str]:
 def write_embeddings(output_file: Path, random_embeddings: List[str]) -> None:
     print(f"INFO: Writing the random embeddings to the {output_file} file")
 
-    with open(output_file, 'w') as file:
+    with open(output_file, 'wt', encoding='UTF-8', errors="replace") as file:
         for random_embedding in random_embeddings:
             file.write(random_embedding)
             file.write("\n")
