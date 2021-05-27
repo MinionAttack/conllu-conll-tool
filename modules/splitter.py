@@ -69,13 +69,14 @@ def read_training_file(training_file: Path) -> List[str]:
 
     blocks = []
     block = ""
-    with open(training_file, 'r') as original:
+    with open(training_file, 'rt', encoding='UTF-8', errors="replace") as original:
         for line in original:
             if line == "\n":
                 blocks.append(block)
                 block = ""
             else:
                 block += line
+
     return blocks
 
 
@@ -96,7 +97,7 @@ def select_random_blocks(blocks) -> Tuple[List[str], List[str]]:
 def write_split_data(new_file: Path, data_collection: List[str]) -> None:
     print(f"INFO: Writing data to file {new_file}")
 
-    with open(new_file, 'w') as output:
+    with open(new_file, 'wt', encoding='UTF-8', errors="replace") as output:
         for block in data_collection:
             output.write(block)
         # All files end with two empty lines

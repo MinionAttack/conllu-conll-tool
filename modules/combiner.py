@@ -56,9 +56,9 @@ def combine_files(type_files_join: str, file_groups: List[List[Path]], input_fol
         else:
             output_file = output_path.joinpath(output_file_name)
 
-        with open(output_file, 'w') as output_stream:
+        with open(output_file, 'wt', encoding='UTF-8', errors="replace") as output_stream:
             for file in file_group:
-                with open(file) as input_stream:
+                with open(file, 'rt', encoding='UTF-8', errors="replace") as input_stream:
                     original = input_stream.read()
                     removed_double_empty_lines = re.sub(r'[\r\n][\r\n]{2,}', '\n', original)
                     output_stream.write(removed_double_empty_lines)

@@ -48,21 +48,18 @@ def check_unknown_tag(input_file, tag_name) -> bool:
     print(f"INFO: Checking if {input_file} file already has the {tag_name} tag")
 
     exists = False
-    with open(input_file, 'r', encoding='iso-8859-1') as file:
-        try:
-            for line in file:
-                pieces = line.split()
-                if len(pieces) > 0:
-                    word = pieces[0]
-                    if word == tag_name:
-                        exists = True
-                        break
-                    else:
-                        continue
+    with open(input_file, 'rt', encoding='UTF-8', errors="replace") as file:
+        for line in file:
+            pieces = line.split()
+            if len(pieces) > 0:
+                word = pieces[0]
+                if word == tag_name:
+                    exists = True
+                    break
                 else:
                     continue
-        except UnicodeDecodeError as error:
-            print(f"ERROR: Unable to get words from {input_file} file, {error.encoding} - {error.reason}")
+            else:
+                continue
 
     return exists
 
@@ -77,13 +74,9 @@ def fill_file(input_file: Path, fill_values: List[str]) -> None:
 
     if len(vector_values) > 0:
         print(f"INFO: Writing data to file")
-        # UD embeddings are in iso-8859-1 (latin1)
-        with open(input_file, 'a', encoding='iso-8859-1') as file:
-            try:
-                line = f"{tag_name} {joined_values}"
-                file.write(line)
-            except UnicodeDecodeError as error:
-                print(f"ERROR: Unable to fill in {input_file} file, {error.encoding} - {error.reason}")
+        with open(input_file, 'at', encoding='UTF-8', errors="replace") as file:
+            line = f"{tag_name} {joined_values}"
+            file.write(line)
 
 
 def generate_vector(dimension: str) -> Any:

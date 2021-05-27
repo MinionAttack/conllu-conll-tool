@@ -46,7 +46,8 @@ def convert_files(files: List[Path], input_path_name: str, output_path: Path) ->
 def convert_file(input_file, output_file) -> None:
     print(f"INFO: Converting {input_file} file to {output_file} file")
 
-    with open(input_file, 'r') as conllu, open(output_file, 'w') as conll:
+    with open(input_file, 'rt', encoding='UTF-8', errors="replace") as conllu, open(output_file, 'wt', encoding='UTF-8',
+                                                                                    errors="replace") as conll:
         for line in conllu:
             tuples = line.split()
             if len(tuples) == 10 and tuples[0] != '#' and '.' not in tuples[0] and '-' not in tuples[0]:
