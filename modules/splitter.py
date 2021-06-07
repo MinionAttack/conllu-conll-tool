@@ -72,6 +72,7 @@ def read_training_file(training_file: Path) -> List[str]:
     with open(training_file, 'rt', encoding='UTF-8', errors="replace") as original:
         for line in original:
             if line == "\n":
+                block += "\n"
                 blocks.append(block)
                 block = ""
             else:
@@ -100,5 +101,3 @@ def write_split_data(new_file: Path, data_collection: List[str]) -> None:
     with open(new_file, 'wt', encoding='UTF-8', errors="replace") as output:
         for block in data_collection:
             output.write(block)
-        # All files end with two empty lines
-        output.write("\n")
