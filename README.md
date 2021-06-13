@@ -40,12 +40,44 @@ To run the script, from a terminal in the root directory, type:
 This will show the usage:
 
 ```  
-usage: conllu-to-conll.py [-h] --input INPUT [--output OUTPUT]
-                          [--combine {train,dev,test}] [--split SPLIT]
-                          [--clean CLEAN] [--unknown UNKNOWN UNKNOWN]
-                          [--generate GENERATE]
-conllu-to-conll.py: error: the following arguments are required: --input  
+usage: conllu-to-conll.py [-h] {convert,combine,split,clean,fill,generate} ...
+
+Convert conllu files to conll files
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+Commands:
+  {convert,combine,split,clean,fill,generate}
+    convert             Convert from conllu format to conll format.
+    combine             Combine multiple files from one phase (train,
+                        validation or test) into one file.
+    split               In case there is no validation file (dev), the
+                        training file (train) is split in two with a random
+                        80-20 ratio.
+    clean               Cleans up an embedding file by removing the first line
+                        with the number of words and the vector size.
+    fill                Add a label (with the given name) for unknown words
+                        with random values, using a fixed seed for the given
+                        dimension.
+    generate            Generates a random embeddings file with the specified
+                        dimension from the training and validation file.  
 ```  
+
+If you want to know how to use a specific command, for example the *clean* command, type:
+
+`python conllu-to-conll.py clean --help`
+
+And it will show the help:
+
+```
+usage: conllu-to-conll.py clean [-h] --input INPUT --output OUTPUT
+    
+optional arguments:
+  -h, --help       show this help message and exit
+  --input INPUT    Input files folder
+  --output OUTPUT  Output files folder
+```
 
 ### Note
 
@@ -59,7 +91,7 @@ Run the script again.
 
 ### 1. Convert files
 
-`$ ./conllu-to-conll.py --input conllu --output conll`
+`$ ./conllu-to-conll.py convert --input conllu --output conll`
 
 - **conllu**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files to be converted are located.
   - You can put the files directly or if you want to convert several languages you can put the files in different folders (one for each
@@ -68,7 +100,7 @@ Run the script again.
 
 ### 2. Combine files
 
-`$ ./conllu-to-conll.py --input conllu --output combined --combine train`
+`$ ./conllu-to-conll.py combine --input conllu --output combined --type train`
 
 - **conllu**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files to be combined are located.
   - You can put the files directly or if you want to combine several languages you can put the files in different folders (one for each
@@ -78,7 +110,7 @@ Run the script again.
 
 ### 3. Split files
 
-`$ ./conllu-to-conll.py --input conllu --output splitted --split true`
+`$ ./conllu-to-conll.py split --input conllu --output splitted`
 
 - **conllu**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files to be splitted are located.
   - You can put the files directly or if you want to split several languages you can put the files in different folders (one for each
@@ -86,23 +118,21 @@ Run the script again.
   - Unless the code is modified, the split is **80% for the training phase** and **20% for the validation phase**.
 - **splitted**: Directory (must have been created) inside the *output* folder where the splitted (*train* and *dev*) *CoNLL-U* files shall
   be created.
-- **true**: To do the split, the default value is set to *false*.
 
 ### 4. Clean up files
 
-`$ ./conllu-to-conll.py --input embeddings --output cleaned --clean true`
+`$ ./conllu-to-conll.py clean --input embeddings --output cleaned`
 
 - **embeddings**: Directory (must have been created) inside the *output* folder where the embedding files to be cleaned are located.
   - You can put the files directly or if you want to clean several languages you can put the files in different folders (one for each
     language), but be aware that the script does not process more than one level of subdirectories.
 - **cleaned**: Directory (must have been created) inside the *output* folder where the cleaned embedding files shall be created.
-- **true**: To do the cleaning, the default value is set to *false*.
 
 ### 5. Fill in files
 
-`$ ./conllu-to-conll.py --input fill -unknown unk 100`
+`$ ./conllu-to-conll.py fill --input embeddings --label unk --dimension 100`
 
-- **fill**: Directory (must have been created) inside the *output* folder where the embedding files to be filled in are located.
+- **embeddings**: Directory (must have been created) inside the *output* folder where the embedding files to be filled in are located.
   - You can put the files directly or if you want to fill in several languages you can put the files in different folders (one for each
     language), but be aware that the script does not process more than one level of subdirectories.
 - **unk**: Name of the tag to attach to the embeddings file.
@@ -110,7 +140,7 @@ Run the script again.
 
 ### 6. Generate files
 
-`$ ./conllu-to-conll.py --input no_embeddings --output generated --generate 100`
+`$ ./conllu-to-conll.py generate --input no_embeddings --output generated --dimension 100`
 
 - **no_embeddings**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files (*train* and *dev*) from which
   the embeddings file will be generated are located.
