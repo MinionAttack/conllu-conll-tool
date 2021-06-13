@@ -6,16 +6,13 @@ from typing import List, Any
 import numpy as numpy
 
 
-def validate_parameters(parameters: List[str]) -> bool:
+def validate_parameters(tag_name: str) -> bool:
     print("INFO: Validating parameters")
 
-    tag_name = parameters[0]
-    dimensions = parameters[1]
-
-    return tag_name.isalpha() and dimensions.isdecimal()
+    return tag_name.isalpha()
 
 
-def walk_directories(input_path: Path, fill_values: List[str]) -> None:
+def walk_directories(input_path: Path, label: str, dimension: int) -> None:
     print("INFO: Browsing through directories to fill in")
 
     files = []
@@ -29,19 +26,18 @@ def walk_directories(input_path: Path, fill_values: List[str]) -> None:
         else:
             continue
 
-    fill_files(files, fill_values)
+    fill_files(files, label, dimension)
 
 
-def fill_files(files: List[Path], fill_values: List[str]) -> None:
+def fill_files(files: List[Path], label: str, dimension: int) -> None:
     print("INFO: Filling in the files")
 
-    tag_name = fill_values[0]
     for file in files:
-        has_unknown_tag = check_unknown_tag(file, tag_name)
+        has_unknown_tag = check_unknown_tag(file, label)
         if not has_unknown_tag:
-            fill_file(file, fill_values)
+            fill_file(file, label, dimension)
         else:
-            print(f"INFO: {file} file already has the {tag_name} tag, skipping")
+            print(f"INFO: {file} file already has the {label} tag, skipping")
 
 
 def check_unknown_tag(input_file, tag_name) -> bool:
@@ -64,41 +60,26 @@ def check_unknown_tag(input_file, tag_name) -> bool:
     return exists
 
 
-def fill_file(input_file: Path, fill_values: List[str]) -> None:
-    print(f"INFO: Filling in {input_file} file with {fill_values[0]} tag for {fill_values[1]} dimension(s)")
+def fill_file(input_file: Path, label: str, dimension: int) -> None:
+    print(f"INFO: Filling in {input_file} file with {label} tag for {dimension} dimension(s)")
 
-    tag_name = fill_values[0]
-    dimensions = fill_values[1]
-    vector_values = generate_vector(dimensions)
+    vector_values = generate_vector(dimension)
     joined_values = ' '.join("%1.6f" % vector_value for vector_value in vector_values)
 
     if len(vector_values) > 0:
         print(f"INFO: Writing data to file")
         with open(input_file, 'at', encoding='UTF-8', errors="replace") as file:
-            line = f"{tag_name} {joined_values}"
+            line = f"{label} {joined_values}"
             file.write(line)
 
 
-def generate_vector(dimension: str) -> Any:
+def generate_vector(dimension: int) -> Any:
     print(f"INFO: Generating vector of random numbers with a dimension of {dimension}")
 
-    if is_a_number(dimension):
-        dimension = int(dimension)
-        low_side = -(1 / (2 * dimension))
-        high_side = 1 / (2 * dimension)
-        # Fixed seed to be able to reproduce the experiments
-        random_generator = numpy.random.default_rng(42)
-        values = random_generator.uniform(low_side, high_side, dimension)
+    low_side = -(1 / (2 * dimension))
+    high_side = 1 / (2 * dimension)
+    # Fixed seed to be able to reproduce the experiments
+    random_generator = numpy.random.default_rng(42)
+    values = random_generator.uniform(low_side, high_side, dimension)
 
-        return values
-    else:
-        print(f"ERROR: The dimension argument is not a valid number")
-        return []
-
-
-def is_a_number(number: str) -> bool:
-    try:
-        int(number)
-        return True
-    except ValueError:
-        return False
+    return values
