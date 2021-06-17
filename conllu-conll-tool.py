@@ -4,11 +4,11 @@
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 
-from modules import combiner, splitter, converter, cleaner, filler, generator
+from modules import combiner, splitter, converter, cleaner, filler, embeddings_generator, calculate_ttest, columns_generator
 
 
 def main() -> None:
-    parser = ArgumentParser(description='Convert conllu files to conll files')
+    parser = ArgumentParser(description='Convert CoNLL-U files to CoNLL files')
     subparsers = parser.add_subparsers(title='Commands', dest='command')
 
     input_help = "Input files folder"
@@ -16,7 +16,7 @@ def main() -> None:
     dimension_help = "Vector dimension size"
 
     # Convert
-    subparser = subparsers.add_parser('convert', help='Convert from conllu format to conll format.')
+    subparser = subparsers.add_parser('convert', help='Convert from CoNLL-U format to CoNLL format.')
     subparser.add_argument('--input', type=str, required=True, help=input_help)
     subparser.add_argument('--output', type=str, required=True, help=output_help)
     # Combine
@@ -46,12 +46,23 @@ def main() -> None:
     subparser.add_argument('--input', type=str, required=True, help=input_help)
     subparser.add_argument('--output', type=str, required=True, help=output_help)
     subparser.add_argument('--dimension', type=int, required=True, help=dimension_help)
+    # Columns
+    subparser = subparsers.add_parser('columns', help='Adds the required number of columns to the end of each line of a CoNLL file to '
+                                                      'match the CoNLL-U format of 10 tab-separated columns.')
+    subparser.add_argument('--input', type=str, required=True, help=input_help)
+    subparser.add_argument('--output', type=str, required=True, help=output_help)
+    # T-Test
+    subparser = subparsers.add_parser('ttest', help='Calculate the T-test for the means of two independent samples of scores.')
+    subparser.add_argument('--gold_a', type=str, required=True, help="Folder with the original CoNLL test files for the parser A")
+    subparser.add_argument('--predicted_a', type=str, required=True, help="Folder with CoNLL test files predicted by a model of parser A")
+    subparser.add_argument('--gold_b', type=str, required=True, help="Folder with the original CoNLL test files for the parser B")
+    subparser.add_argument('--predicted_b', type=str, required=True, help="Folder with CoNLL test files predicted by a model of parser B")
 
     arguments = parser.parse_args()
-    if not arguments.command:
-        parser.print_help()
-    else:
+    if arguments.command:
         process_arguments(arguments)
+    else:
+        parser.print_help()
 
 
 def process_arguments(arguments: Namespace) -> None:
@@ -86,7 +97,17 @@ def process_arguments(arguments: Namespace) -> None:
         input_folder = arguments.input
         output_folder = arguments.output
         dimension = arguments.dimension
-        generator_handler(base_path, input_folder, output_folder, dimension)
+        embeddings_generator_handler(base_path, input_folder, output_folder, dimension)
+    elif command == "columns":
+        input_folder = arguments.input
+        output_folder = arguments.output
+        columns_generator_handler(base_path, input_folder, output_folder)
+    elif command == "ttest":
+        gold_a_folder = arguments.gold_a
+        predicted_a_folder = arguments.predicted_a
+        gold_b_folder = arguments.gold_b
+        predicted_b_folder = arguments.predicted_b
+        ttest_handler(gold_a_folder, predicted_a_folder, gold_b_folder, predicted_b_folder)
     else:
         print(f"Error: Command {command} is not recognised")
 
@@ -137,6 +158,7 @@ def cleaner_handler(base_path: str, input_folder: str, output_folder: str) -> No
 
 def filler_handler(base_path: str, input_folder: str, label: str, dimension: int) -> None:
     input_path = Path(base_path).joinpath(input_folder)
+
     if input_path.is_dir():
         if filler.validate_parameters(label):
             filler.walk_directories(input_path, label, dimension)
@@ -146,11 +168,34 @@ def filler_handler(base_path: str, input_folder: str, label: str, dimension: int
         print(FOLDER_ERROR_MESSAGE)
 
 
-def generator_handler(base_path: str, input_folder: str, output_folder: str, dimension: int) -> None:
+def embeddings_generator_handler(base_path: str, input_folder: str, output_folder: str, dimension: int) -> None:
     input_path = Path(base_path).joinpath(input_folder)
     output_path = Path(base_path).joinpath(output_folder)
+
     if input_path.is_dir() and output_path.is_dir():
-        generator.walk_directories(input_path, output_path, dimension)
+        embeddings_generator.walk_directories(input_path, output_path, dimension)
+    else:
+        print(FOLDERS_ERROR_MESSAGE)
+
+
+def columns_generator_handler(base_path: str, input_folder: str, output_folder: str) -> None:
+    input_path = Path(base_path).joinpath(input_folder)
+    output_path = Path(base_path).joinpath(output_folder)
+
+    if input_path.is_dir() and output_path.is_dir():
+        columns_generator.walk_directories(input_path, output_path)
+    else:
+        print(FOLDERS_ERROR_MESSAGE)
+
+
+def ttest_handler(gold_a_folder: str, predicted_a_folder: str, gold_b_folder: str, predicted_b_folder: str) -> None:
+    gold_a_path = Path.home().joinpath(gold_a_folder)
+    predicted_a_path = Path.home().joinpath(predicted_a_folder)
+    gold_b_path = Path.home().joinpath(gold_b_folder)
+    predicted_b_path = Path.home().joinpath(predicted_b_folder)
+
+    if gold_a_path.is_dir() and predicted_a_path.is_dir() and gold_b_path.is_dir() and predicted_b_path.is_dir():
+        calculate_ttest.walk_directories(gold_a_path, predicted_a_path, gold_b_path, predicted_b_path)
     else:
         print(FOLDERS_ERROR_MESSAGE)
 

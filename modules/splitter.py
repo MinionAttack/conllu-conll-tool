@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import re
 from decimal import getcontext, ROUND_HALF_UP, Decimal
 from pathlib import Path
 from random import sample
+from re import search
 from typing import List, Tuple
 
 
@@ -29,7 +29,7 @@ def walk_directories(input_path: Path, output_path: Path) -> None:
 def valid_file_split(name: str) -> bool:
     pattern = '\\-train\\.conllu$'
 
-    result = re.search(pattern, name)
+    result = search(pattern, name)
     if result:
         return True
     else:

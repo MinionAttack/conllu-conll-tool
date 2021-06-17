@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import re
 from pathlib import Path
+from re import search
 from typing import List
 
 import numpy
@@ -19,11 +19,11 @@ def walk_directories(input_path: Path, output_path: Path, dimensions: int) -> No
         directory_group = []
         if item.is_dir() and not item.name.startswith('.'):
             for element in item.iterdir():
-                if element.is_file() and re.search(pattern, element.name) is not None:
+                if element.is_file() and search(pattern, element.name) is not None:
                     directory_group.append(element)
             if directory_group:
                 files_to_generate.append(directory_group)
-        elif item.is_file() and not item.name.startswith('.') and re.search(pattern, item.name) is not None:
+        elif item.is_file() and not item.name.startswith('.') and search(pattern, item.name) is not None:
             files_root_folder.append(item)
         else:
             continue

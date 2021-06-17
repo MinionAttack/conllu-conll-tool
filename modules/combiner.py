@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import re
 from pathlib import Path
+from re import search, sub
 from typing import Any, List
 
 
@@ -33,7 +33,7 @@ def walk_directories(input_path: Path, output_path: Path, type_files_join: Any) 
 def valid_file_combine(name: str, type_files_join) -> bool:
     pattern = f"\\-{type_files_join}\\-"
 
-    result = re.search(pattern, name)
+    result = search(pattern, name)
     if result:
         return True
     else:
@@ -60,6 +60,6 @@ def combine_files(type_files_join: str, file_groups: List[List[Path]], input_fol
             for file in file_group:
                 with open(file, 'rt', encoding='UTF-8', errors="replace") as input_stream:
                     original = input_stream.read()
-                    removed_double_empty_lines = re.sub(r'[\r\n][\r\n]{2,}', '\n', original)
+                    removed_double_empty_lines = sub(r'[\r\n][\r\n]{2,}', '\n', original)
                     output_stream.write(removed_double_empty_lines)
         print(f"INFO: Files of type {type_files_join} have been correctly combined into {output_file}")
