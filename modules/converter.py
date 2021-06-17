@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import re
 from pathlib import Path
+from re import search
 from typing import List
 
 
@@ -30,7 +30,7 @@ def convert_files(files: List[Path], input_path_name: str, output_path: Path) ->
     pattern = '\\-(train|test|dev)\\.conllu$'
     for file in files:
         name = file.name
-        result = re.search(pattern, name)
+        result = search(pattern, name)
         if result:
             output_name = name.replace("conllu", "conll")
             file_folder_name = file.parent.name
