@@ -13,7 +13,7 @@ Table of contents.
 
 This is a tool to convert *CoNLL-U* format files to *CoNLL* format files and manipulate training, validation and test sets.
 
-This script has eigth features:
+This script has nine features:
 
 1. Convert files in *CoNLL-U* format to *CoNLL* format.
 2. Combine several files of a given training phase into one file.
@@ -24,7 +24,8 @@ This script has eigth features:
 6. Generate an embedding file with the words from the training file and the validation file with random values for a specific dimension. A
    fixed seed is used to be able to reproduce the experiments.
 7. Adds the required number of columns to the end of each line of a *CoNLL* file to match the *CoNLL-U* format of 10 tab-separated columns.
-8. Calculate the *T-test* for the means of two independent samples of scores.
+8. Removes POS information on every line of a sentence. The content is replaced by a _.
+9. Calculate the *T-test* for the means of two independent samples of scores.
 
 **It is important to note that the script uses the _output_ folder as the base directory for both input and output files in some features.**
 
@@ -42,7 +43,7 @@ This will show the usage:
 
 ```
 usage: conllu-conll-tool.py [-h]
-                            {convert,combine,split,clean,fill,generate,columns,ttest}
+                            {convert,combine,split,clean,fill,generate,columns,remove,ttest}
                             ...
 
 Convert CoNLL-U files to CoNLL files
@@ -51,7 +52,7 @@ optional arguments:
   -h, --help            show this help message and exit
 
 Commands:
-  {convert,combine,split,clean,fill,generate,columns,ttest}
+  {convert,combine,split,clean,fill,generate,columns,remove,ttest}
     convert             Convert from CoNLL-U format to CoNLL format.
     combine             Combine multiple files from one phase (train,
                         validation or test) into one file.
@@ -68,6 +69,8 @@ Commands:
     columns             Adds the required number of columns to the end of each
                         line of a CoNLL file to match the CoNLL-U format of 10
                         tab-separated columns.
+    remove              Removes POS information on every line of a sentence.
+                        The content is replaced by a _.
     ttest               Calculate the T-test for the means of two independent
                         samples of scores.
 ```
@@ -167,7 +170,17 @@ Run the script again.
 - **output**: Directory (must have been created) within the output folder where the *CoNLL* files will be created with the *CoNLL-U*
   column format.
 
-### 8. Calculate T-Test
+### 8. Remove POS
+
+`$ ./conllu-conll-tool.py remove --input with_pos --output without_pos`
+
+- **input**: Directory (must have been created) inside the *output* folder where the *CoNLL* files with the POS information are located.
+    - You can put the files directly or if you want to add columns to several languages you can put the files in different folders (one for
+      each language), but be aware that the script does not process more than one level of subdirectories.
+- **output**: Directory (must have been created) within the output folder where the *CoNLL* files without the POS information will be
+  created.
+
+### 9. Calculate T-Test
 
 `$ ./conllu-conll-tool.py ttest --gold_a parser_a/gold --predicted_a parser_a/predicted --gold_b parser_b/gold --predicted_b parser_b/predicted`
 

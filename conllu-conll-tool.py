@@ -4,15 +4,15 @@
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 
-from modules import combiner, splitter, converter, cleaner, filler, embeddings_generator, calculate_ttest, columns_generator
+from modules import combiner, splitter, converter, cleaner, filler, embeddings_generator, calculate_ttest, columns_generator, remove_pos
 
 
 def main() -> None:
     parser = ArgumentParser(description='Convert CoNLL-U files to CoNLL files')
     subparsers = parser.add_subparsers(title='Commands', dest='command')
 
-    input_help = "Input files folder"
-    output_help = "Output files folder"
+    input_help = "Input file(s) folder"
+    output_help = "Output file(s) folder"
     dimension_help = "Vector dimension size"
 
     # Convert
@@ -49,6 +49,10 @@ def main() -> None:
     # Columns
     subparser = subparsers.add_parser('columns', help='Adds the required number of columns to the end of each line of a CoNLL file to '
                                                       'match the CoNLL-U format of 10 tab-separated columns.')
+    subparser.add_argument('--input', type=str, required=True, help=input_help)
+    subparser.add_argument('--output', type=str, required=True, help=output_help)
+    # Remove POS
+    subparser = subparsers.add_parser('remove', help='Removes POS information on every line of a sentence. The content is replaced by a _.')
     subparser.add_argument('--input', type=str, required=True, help=input_help)
     subparser.add_argument('--output', type=str, required=True, help=output_help)
     # T-Test
@@ -102,6 +106,10 @@ def process_arguments(arguments: Namespace) -> None:
         input_folder = arguments.input
         output_folder = arguments.output
         columns_generator_handler(base_path, input_folder, output_folder)
+    elif command == "remove":
+        input_folder = arguments.input
+        output_folder = arguments.output
+        remove_pos_handler(base_path, input_folder, output_folder)
     elif command == "ttest":
         gold_a_folder = arguments.gold_a
         predicted_a_folder = arguments.predicted_a
@@ -184,6 +192,16 @@ def columns_generator_handler(base_path: str, input_folder: str, output_folder: 
 
     if input_path.is_dir() and output_path.is_dir():
         columns_generator.walk_directories(input_path, output_path)
+    else:
+        print(FOLDERS_ERROR_MESSAGE)
+
+
+def remove_pos_handler(base_path: str, input_folder: str, output_folder: str) -> None:
+    input_path = Path(base_path).joinpath(input_folder)
+    output_path = Path(base_path).joinpath(output_folder)
+
+    if input_path.is_dir() and output_path.is_dir():
+        remove_pos.walk_directories(input_path, output_path)
     else:
         print(FOLDERS_ERROR_MESSAGE)
 
