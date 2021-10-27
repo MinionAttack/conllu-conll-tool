@@ -4,7 +4,8 @@
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 
-from modules import combiner, splitter, converter, cleaner, filler, embeddings_generator, calculate_ttest, columns_generator, remove_pos
+from modules import column_remover, columns_swapper, remove_pos
+from modules import combiner, splitter, converter, cleaner, filler, embeddings_generator, calculate_ttest, columns_generator
 
 
 def main() -> None:
@@ -46,13 +47,14 @@ def main() -> None:
     subparser.add_argument('--input', type=str, required=True, help=input_help)
     subparser.add_argument('--output', type=str, required=True, help=output_help)
     subparser.add_argument('--dimension', type=int, required=True, help=dimension_help)
-    # Columns
+    # Add columns
     subparser = subparsers.add_parser('columns', help='Adds the required number of columns to the end of each line of a CoNLL file to '
                                                       'match the CoNLL-U format of 10 tab-separated columns.')
     subparser.add_argument('--input', type=str, required=True, help=input_help)
     subparser.add_argument('--output', type=str, required=True, help=output_help)
     # Remove POS
-    subparser = subparsers.add_parser('remove', help='Removes POS information on every line of a sentence. The content is replaced by a _.')
+    subparser = subparsers.add_parser('remove-pos', help='Removes POS information on every line of a sentence. The content is replaced by '
+                                                         'a _.')
     subparser.add_argument('--input', type=str, required=True, help=input_help)
     subparser.add_argument('--output', type=str, required=True, help=output_help)
     # T-Test
@@ -61,6 +63,17 @@ def main() -> None:
     subparser.add_argument('--predicted_a', type=str, required=True, help="Folder with CoNLL test files predicted by a model of parser A")
     subparser.add_argument('--gold_b', type=str, required=True, help="Folder with the original CoNLL test files for the parser B")
     subparser.add_argument('--predicted_b', type=str, required=True, help="Folder with CoNLL test files predicted by a model of parser B")
+    # Swap
+    subparser = subparsers.add_parser('swap', help='Swap the position of two given columns.')
+    subparser.add_argument('--input', type=str, required=True, help=input_help)
+    subparser.add_argument('--output', type=str, required=True, help=output_help)
+    subparser.add_argument('--from_position', type=int, required=True, help='Column to be swapped, starting from number zero.')
+    subparser.add_argument('--to_position', type=int, required=True, help='Column to swap with, starting from number zero.')
+    # Remove column
+    subparser = subparsers.add_parser('remove-column', help='Remove the column at the given position, starting from number zero.')
+    subparser.add_argument('--input', type=str, required=True, help=input_help)
+    subparser.add_argument('--output', type=str, required=True, help=output_help)
+    subparser.add_argument('--position', type=int, required=True, help='Column to be removed, starting from number zero.')
 
     arguments = parser.parse_args()
     if arguments.command:
@@ -106,7 +119,7 @@ def process_arguments(arguments: Namespace) -> None:
         input_folder = arguments.input
         output_folder = arguments.output
         columns_generator_handler(base_path, input_folder, output_folder)
-    elif command == "remove":
+    elif command == "remove-pos":
         input_folder = arguments.input
         output_folder = arguments.output
         remove_pos_handler(base_path, input_folder, output_folder)
@@ -116,6 +129,17 @@ def process_arguments(arguments: Namespace) -> None:
         gold_b_folder = arguments.gold_b
         predicted_b_folder = arguments.predicted_b
         ttest_handler(gold_a_folder, predicted_a_folder, gold_b_folder, predicted_b_folder)
+    elif command == "swap":
+        input_folder = arguments.input
+        output_folder = arguments.output
+        column_from = arguments.from_position
+        column_to = arguments.to_position
+        swap_handler(base_path, input_folder, output_folder, column_from, column_to)
+    elif command == "remove-column":
+        input_folder = arguments.input
+        output_folder = arguments.output
+        position = arguments.position
+        remove_column_handler(base_path, input_folder, output_folder, position)
     else:
         print(f"Error: Command {command} is not recognised")
 
@@ -214,6 +238,26 @@ def ttest_handler(gold_a_folder: str, predicted_a_folder: str, gold_b_folder: st
 
     if gold_a_path.is_dir() and predicted_a_path.is_dir() and gold_b_path.is_dir() and predicted_b_path.is_dir():
         calculate_ttest.walk_directories(gold_a_path, predicted_a_path, gold_b_path, predicted_b_path)
+    else:
+        print(FOLDERS_ERROR_MESSAGE)
+
+
+def swap_handler(base_path: str, input_folder: str, output_folder: str, column_from: int, column_to: int) -> None:
+    input_path = Path(base_path).joinpath(input_folder)
+    output_path = Path(base_path).joinpath(output_folder)
+
+    if input_path.is_dir() and output_path.is_dir():
+        columns_swapper.walk_directories(input_path, output_path, column_from, column_to)
+    else:
+        print(FOLDERS_ERROR_MESSAGE)
+
+
+def remove_column_handler(base_path: str, input_folder: str, output_folder: str, position: int) -> None:
+    input_path = Path(base_path).joinpath(input_folder)
+    output_path = Path(base_path).joinpath(output_folder)
+
+    if input_path.is_dir() and output_path.is_dir():
+        column_remover.walk_directories(input_path, output_path, position)
     else:
         print(FOLDERS_ERROR_MESSAGE)
 

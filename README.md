@@ -13,7 +13,7 @@ Table of contents.
 
 This is a tool to convert *CoNLL-U* format files to *CoNLL* format files and manipulate training, validation and test sets.
 
-This script has nine features:
+This script has eleven features:
 
 1. Convert files in *CoNLL-U* format to *CoNLL* format.
 2. Combine several files of a given training phase into one file.
@@ -26,6 +26,8 @@ This script has nine features:
 7. Adds the required number of columns to the end of each line of a *CoNLL* file to match the *CoNLL-U* format of 10 tab-separated columns.
 8. Removes POS information on every line of a sentence. The content is replaced by a _.
 9. Calculate the *T-test* for the means of two independent samples of scores.
+10. Swaps the position of two given columns.
+11. Deletes the column at the given position, starting from the number zero.
 
 **It is important to note that the script uses the _output_ folder as the base directory for both input and output files in some features.**
 
@@ -43,7 +45,7 @@ This will show the usage:
 
 ```
 usage: conllu-conll-tool.py [-h]
-                            {convert,combine,split,clean,fill,generate,columns,remove,ttest}
+                            {convert,combine,split,clean,fill,generate,columns,remove-pos,ttest,swap,remove-column}
                             ...
 
 Convert CoNLL-U files to CoNLL files
@@ -52,7 +54,7 @@ optional arguments:
   -h, --help            show this help message and exit
 
 Commands:
-  {convert,combine,split,clean,fill,generate,columns,remove,ttest}
+  {convert,combine,split,clean,fill,generate,columns,remove-pos,ttest,swap,remove-column}
     convert             Convert from CoNLL-U format to CoNLL format.
     combine             Combine multiple files from one phase (train,
                         validation or test) into one file.
@@ -69,10 +71,13 @@ Commands:
     columns             Adds the required number of columns to the end of each
                         line of a CoNLL file to match the CoNLL-U format of 10
                         tab-separated columns.
-    remove              Removes POS information on every line of a sentence.
+    remove-pos          Removes POS information on every line of a sentence.
                         The content is replaced by a _.
     ttest               Calculate the T-test for the means of two independent
                         samples of scores.
+    swap                Swap the position of two given columns.
+    remove-column       Remove the column at the given position, starting from
+                        number zero.
 ```
 
 If you want to know how to use a specific command, for example the *clean* command, type:
@@ -172,7 +177,7 @@ Run the script again.
 
 ### 8. Remove POS
 
-`$ ./conllu-conll-tool.py remove --input with_pos --output without_pos`
+`$ ./conllu-conll-tool.py remove-pos --input with_pos --output without_pos`
 
 - **input**: Directory (must have been created) inside the *output* folder where the *CoNLL* files with the POS information are located.
     - You can put the files directly or if you want to add columns to several languages you can put the files in different folders (one for
@@ -197,11 +202,33 @@ Run the script again.
     - You can put the files directly or if you want to analyse several languages you can put the files in different folders (one for each
       language), but be aware that the script does not process more than one level of subdirectories.
 
-### Note
+#### Note
 
 1. The *gold_x* directory and the *predicted_x* directory must have the same number of languages in order to perform the calculations.
 2. The *predicted_x* directory and the *predicted_y* directory must have the same number of languages and in each language the same number
    of predicted files in order to perform the calculations.
+
+### 10. Swap columns
+
+`$ ./conllu-conll-tool.py swap --input original --output swapped --from_position 10 --to_position 8`
+
+- **input**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files for swapping columns are located.
+    - You can put the files directly or if you want to swap columns to several languages you can put the files in different folders (one for
+      each language), but be aware that the script does not process more than one level of subdirectories.
+- **output**: Directory (must have been created) within the output folder where the *CoNLL-U* files with the swapped columns will be
+  created.
+- **from_position**: Number of the column, starting from zero, to swap.
+- **to_position**: Number of the column, starting from zero, to swap with.
+
+### 11. Remove column
+
+`$ ./conllu-conll-tool.py remove-column --input original --output removed --position 10`
+
+- **input**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files are located to delete the column.
+    - You can put the files directly or if you want to remove a column to several languages you can put the files in different folders
+      (one for each language), but be aware that the script does not process more than one level of subdirectories.
+- **output**: Directory (must have been created) within the output folder where the *CoNLL-U* files with the deleted column will be created.
+- **position**: Number of the column, starting from zero, to be deleted.
 
 ## Licensing agreement
 
