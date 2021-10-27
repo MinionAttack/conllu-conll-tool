@@ -5,14 +5,14 @@ from re import search
 from typing import List
 
 
-def walk_directories(input_path: Path, output_folder: Path) -> None:
-    print("INFO: Browsing through directories to generate columns")
+def walk_directories(input_folder: Path, output_folder: Path, position: int) -> None:
+    print("INFO: Browsing through directories to remove column")
 
-    pattern = '\\.conll$'
-    input_path_name = input_path.name
+    pattern = '\\.conllu$'
+    input_path_name = input_folder.name
     files = []
 
-    for item in input_path.glob("*"):
+    for item in input_folder.glob("*"):
         if item.is_dir() and not item.name.startswith('.'):
             for element in item.iterdir():
                 if element.is_file() and search(pattern, element.name):
@@ -22,11 +22,11 @@ def walk_directories(input_path: Path, output_folder: Path) -> None:
         else:
             continue
 
-    generate_columns(files, input_path_name, output_folder)
+    remove_column(files, input_path_name, position, output_folder)
 
 
-def generate_columns(files: List[Path], input_path_name: str, output_path: Path) -> None:
-    print("INFO: Generating columns")
+def remove_column(files: List[Path], input_path_name: str, position: int, output_path: Path) -> None:
+    print("INFO: Removing column")
 
     for file in files:
         file_folder_name = file.parent.name
@@ -36,27 +36,21 @@ def generate_columns(files: List[Path], input_path_name: str, output_path: Path)
             output_file = file_folder.joinpath(file.name)
         else:
             output_file = output_path.joinpath(file.name)
-        generate(file, output_file)
+        remove(file, position, output_file)
 
 
-def generate(file: Path, output_file: Path) -> None:
+def remove(file: Path, position: int, output_file: Path) -> None:
     with open(file, 'rt', encoding='UTF-8', errors="replace") as actual_file, open(output_file, 'wt', encoding='UTF-8',
                                                                                    errors="replace") as new_file:
         for line in actual_file:
-            if line != "\n":
-                line = line.replace("\n", "")
-                tuples = line.split("\t")
-                if len(tuples) < 10:
-                    columns_to_generate = 10 - len(tuples)
-                    expand_line(tuples, columns_to_generate)
+            if not line.startswith("# sent_id =") and not line.startswith("# text ="):
+                if line != "\n":
+                    line = line.replace("\n", "")
+                    tuples = line.split("\t")
+                    del tuples[position]
                     new_line = '\t'.join(tuples) + '\n'
                     new_file.write(new_line)
                 else:
-                    new_file.write(line)
+                    new_file.write('\n')
             else:
-                new_file.write('\n')
-
-
-def expand_line(tuples: List[str], columns_to_generate: int) -> None:
-    for _ in range(columns_to_generate):
-        tuples.append("_")
+                continue
