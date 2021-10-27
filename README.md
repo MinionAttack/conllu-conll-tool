@@ -109,46 +109,46 @@ Run the script again.
 
 `$ ./conllu-conll-tool.py convert --input conllu --output conll`
 
-- **input**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files to be converted are located.
+- **input**: Directory (must have been created) within the *output* folder where the *CoNLL-U* files to be converted are located.
     - You can put the files directly or if you want to convert several languages you can put the files in different folders (one for each  
       language), but be aware that the script does not process more than one level of subdirectories.
-- **output**: Directory (must have been created) inside the *output* folder where the converted *CoNLL* files shall be created.
+- **output**: Directory (must have been created) within the *output* folder where the converted *CoNLL* files shall be created.
 
 ### 2. Combine files
 
 `$ ./conllu-conll-tool.py combine --input conllu --output combined --type train`
 
-- **input**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files to be combined are located.
+- **input**: Directory (must have been created) within the *output* folder where the *CoNLL-U* files to be combined are located.
     - You can put the files directly or if you want to combine several languages you can put the files in different folders (one for each  
       language), but be aware that the script does not process more than one level of subdirectories.
-- **output**: Directory (must have been created) inside the *output* folder where the combined *CoNLL-U* files shall be created.
+- **output**: Directory (must have been created) within the *output* folder where the combined *CoNLL-U* files shall be created.
 - **type**: The type of files to combine. This can be one of the following values: `train`, `dev` or `test`.
 
 ### 3. Split files
 
 `$ ./conllu-conll-tool.py split --input conllu --output splitted`
 
-- **input**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files to be splitted are located.
+- **input**: Directory (must have been created) within the *output* folder where the *CoNLL-U* files to be splitted are located.
     - You can put the files directly or if you want to split several languages you can put the files in different folders (one for each  
       language), but be aware that the script does not process more than one level of subdirectories.
     - Unless the code is modified, the split is **80% for the training phase** and **20% for the validation phase**.
-- **output**: Directory (must have been created) inside the *output* folder where the splitted (*train* and *dev*) *CoNLL-U* files shall  
+- **output**: Directory (must have been created) within the *output* folder where the splitted (*train* and *dev*) *CoNLL-U* files shall  
   be created.
 
 ### 4. Clean up files
 
 `$ ./conllu-conll-tool.py clean --input embeddings --output cleaned`
 
-- **input**: Directory (must have been created) inside the *output* folder where the embedding files to be cleaned are located.
+- **input**: Directory (must have been created) within the *output* folder where the embedding files to be cleaned are located.
     - You can put the files directly or if you want to clean several languages you can put the files in different folders (one for each  
       language), but be aware that the script does not process more than one level of subdirectories.
-- **output**: Directory (must have been created) inside the *output* folder where the cleaned embedding files shall be created.
+- **output**: Directory (must have been created) within the *output* folder where the cleaned embedding files shall be created.
 
 ### 5. Fill in files
 
 `$ ./conllu-conll-tool.py fill --input embeddings --label unk --dimension 100`
 
-- **input**: Directory (must have been created) inside the *output* folder where the embedding files to be filled in are located.
+- **input**: Directory (must have been created) within the *output* folder where the embedding files to be filled in are located.
     - You can put the files directly or if you want to fill in several languages you can put the files in different folders (one for each  
       language), but be aware that the script does not process more than one level of subdirectories.
 - **label**: Name of the tag to attach to the embeddings file.
@@ -158,31 +158,31 @@ Run the script again.
 
 `$ ./conllu-conll-tool.py generate --input no_embeddings --output generated --dimension 100`
 
-- **input**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files (*train* and *dev*) from which  
+- **input**: Directory (must have been created) within the *output* folder where the *CoNLL-U* files (*train* and *dev*) from which  
   the embeddings file will be generated are located.
     - You can put the files directly or if you want to generate several languages you can put the files in different folders (one for each  
       language), but be aware that the script does not process more than one level of subdirectories.
-- **output**: Directory (must have been created) inside the *output* folder where the generated embeddings file shall be created.
+- **output**: Directory (must have been created) within the *output* folder where the generated embeddings file shall be created.
 - **dimension**: The vector dimensions for the tags.
 
 ### 7. Add columns
 
 `$ ./conllu-conll-tool.py columns --input conll_columns --output conllu_columns`
 
-- **input**: Directory (must have been created) inside the *output* folder where the *CoNLL* files are located.
+- **input**: Directory (must have been created) within the *output* folder where the *CoNLL* files are located.
     - You can put the files directly or if you want to add columns to several languages you can put the files in different folders (one for
       each language), but be aware that the script does not process more than one level of subdirectories.
-- **output**: Directory (must have been created) within the output folder where the *CoNLL* files will be created with the *CoNLL-U*
+- **output**: Directory (must have been created) within the *output*folder where the *CoNLL* files will be created with the *CoNLL-U*
   column format.
 
 ### 8. Remove POS
 
 `$ ./conllu-conll-tool.py remove-pos --input with_pos --output without_pos`
 
-- **input**: Directory (must have been created) inside the *output* folder where the *CoNLL* files with the POS information are located.
+- **input**: Directory (must have been created) within the *output* folder where the *CoNLL* files with the POS information are located.
     - You can put the files directly or if you want to add columns to several languages you can put the files in different folders (one for
       each language), but be aware that the script does not process more than one level of subdirectories.
-- **output**: Directory (must have been created) within the output folder where the *CoNLL* files without the POS information will be
+- **output**: Directory (must have been created) within the *output* folder where the *CoNLL* files without the POS information will be
   created.
 
 ### 9. Calculate T-Test
@@ -212,10 +212,10 @@ Run the script again.
 
 `$ ./conllu-conll-tool.py swap --input original --output swapped --from_position 10 --to_position 8`
 
-- **input**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files for swapping columns are located.
+- **input**: Directory (must have been created) within the *output* folder where the *CoNLL-U* files for swapping columns are located.
     - You can put the files directly or if you want to swap columns to several languages you can put the files in different folders (one for
       each language), but be aware that the script does not process more than one level of subdirectories.
-- **output**: Directory (must have been created) within the output folder where the *CoNLL-U* files with the swapped columns will be
+- **output**: Directory (must have been created) within the *output* folder where the *CoNLL-U* files with the swapped columns will be
   created.
 - **from_position**: Number of the column, starting from zero, to swap.
 - **to_position**: Number of the column, starting from zero, to swap with.
@@ -224,10 +224,11 @@ Run the script again.
 
 `$ ./conllu-conll-tool.py remove-column --input original --output removed --position 10`
 
-- **input**: Directory (must have been created) inside the *output* folder where the *CoNLL-U* files are located to delete the column.
+- **input**: Directory (must have been created) within the *output* folder where the *CoNLL-U* files are located to delete the column.
     - You can put the files directly or if you want to remove a column to several languages you can put the files in different folders
       (one for each language), but be aware that the script does not process more than one level of subdirectories.
-- **output**: Directory (must have been created) within the output folder where the *CoNLL-U* files with the deleted column will be created.
+- **output**: Directory (must have been created) within the *output* folder where the *CoNLL-U* files with the deleted column will be
+  created.
 - **position**: Number of the column, starting from zero, to be deleted.
 
 ## Licensing agreement
