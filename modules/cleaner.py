@@ -3,22 +3,14 @@
 from pathlib import Path
 from typing import List
 
+from .utils import search_files
+
 
 def walk_directories(input_path: Path, output_path: Path) -> None:
     print("INFO: Browsing through directories to clean")
 
     input_path_name = input_path.name
-    files = []
-
-    for item in input_path.glob("*"):
-        if item.is_dir() and not item.name.startswith('.'):
-            for element in item.iterdir():
-                if element.is_file():
-                    files.append(element)
-        elif item.is_file() and not item.name.startswith('.'):
-            files.append(item)
-        else:
-            continue
+    files = search_files(input_path)
 
     clean_files(files, input_path_name, output_path)
 

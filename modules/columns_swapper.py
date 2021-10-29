@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from pathlib import Path
-from re import search
 from typing import List
+
+from .utils import search_files_pattern
 
 
 def walk_directories(input_folder: Path, output_folder: Path, column_from: int, column_to: int) -> None:
@@ -10,17 +11,7 @@ def walk_directories(input_folder: Path, output_folder: Path, column_from: int, 
 
     pattern = '\\.conllu$'
     input_path_name = input_folder.name
-    files = []
-
-    for item in input_folder.glob("*"):
-        if item.is_dir() and not item.name.startswith('.'):
-            for element in item.iterdir():
-                if element.is_file() and search(pattern, element.name):
-                    files.append(element)
-        elif item.is_file() and not item.name.startswith('.') and search(pattern, item.name):
-            files.append(item)
-        else:
-            continue
+    files = search_files_pattern(input_folder, pattern)
 
     swap_columns(files, input_path_name, column_from, column_to, output_folder)
 
@@ -53,4 +44,4 @@ def swap(file: Path, column_from: int, column_to: int, output_file: Path) -> Non
                 else:
                     new_file.write('\n')
             else:
-                continue
+                new_file.write(line)

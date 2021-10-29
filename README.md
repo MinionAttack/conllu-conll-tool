@@ -13,7 +13,7 @@ Table of contents.
 
 This is a tool to convert *CoNLL-U* format files to *CoNLL* format files and manipulate training, validation and test sets.
 
-This script has eleven features:
+This script has twelve features:
 
 1. Convert files in *CoNLL-U* format to *CoNLL* format.
 2. Combine several files of a given training phase into one file.
@@ -28,6 +28,7 @@ This script has eleven features:
 9. Calculate the *T-test* for the means of two independent samples of scores.
 10. Swaps the position of two given columns.
 11. Deletes the column at the given position, starting from the number zero.
+12. Adds the column at the given position, starting from number zero, with the specified content.
 
 **It is important to note that the script uses the _output_ folder as the base directory for both input and output files in some features.**
 
@@ -45,7 +46,7 @@ This will show the usage:
 
 ```
 usage: conllu-conll-tool.py [-h]
-                            {convert,combine,split,clean,fill,generate,columns,remove-pos,ttest,swap,remove-column}
+                            {convert,combine,split,clean,fill,generate,columns,remove-pos,ttest,swap,remove-column,add-column}
                             ...
 
 Convert CoNLL-U files to CoNLL files
@@ -54,7 +55,7 @@ optional arguments:
   -h, --help            show this help message and exit
 
 Commands:
-  {convert,combine,split,clean,fill,generate,columns,remove-pos,ttest,swap,remove-column}
+  {convert,combine,split,clean,fill,generate,columns,remove-pos,ttest,swap,remove-column,add-column}
     convert             Convert from CoNLL-U format to CoNLL format.
     combine             Combine multiple files from one phase (train,
                         validation or test) into one file.
@@ -75,9 +76,11 @@ Commands:
                         The content is replaced by a _.
     ttest               Calculate the T-test for the means of two independent
                         samples of scores.
-    swap                Swap the position of two given columns.
-    remove-column       Remove the column at the given position, starting from
-                        number zero.
+    swap                Swaps the position of two given columns.
+    remove-column       Deletes the column at the given position, starting
+                        from number zero.
+    add-column          Adds the column at the given position, starting from
+                        number zero, with the specified content.
 ```
 
 If you want to know how to use a specific command, for example the *clean* command, type:
@@ -230,6 +233,17 @@ Run the script again.
 - **output**: Directory (must have been created) within the *output* folder where the *CoNLL-U* files with the deleted column will be
   created.
 - **position**: Number of the column, starting from zero, to be deleted.
+
+### 12. Add a column
+
+`$ ./conllu-conll-tool.py add-column --input original --output inserted --position 10 --content _`
+
+- **input**: Directory (must have been created) within the *output* folder where the *CoNLL-U* files are located to add the column.
+    - You can put the files directly or if you want to add a column to several languages you can put the files in different folders
+      (one for each language), but be aware that the script does not process more than one level of subdirectories.
+- **output**: Directory (must have been created) within the *output* folder where the *CoNLL-U* files with the added column will be created.
+- **position**: Column to be added, starting from number zero.
+- **content**: Content of the column to be added.
 
 ## Licensing agreement
 

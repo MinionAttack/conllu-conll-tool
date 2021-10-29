@@ -1,8 +1,9 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-utils
 
 from pathlib import Path
-from re import search
 from typing import List
+
+from .utils import search_files_pattern
 
 
 def walk_directories(input_path: Path, output_folder: Path) -> None:
@@ -10,17 +11,7 @@ def walk_directories(input_path: Path, output_folder: Path) -> None:
 
     pattern = '\\.conll$'
     input_path_name = input_path.name
-    files = []
-
-    for item in input_path.glob("*"):
-        if item.is_dir() and not item.name.startswith('.'):
-            for element in item.iterdir():
-                if element.is_file() and search(pattern, element.name):
-                    files.append(element)
-        elif item.is_file() and not item.name.startswith('.') and search(pattern, item.name):
-            files.append(item)
-        else:
-            continue
+    files = search_files_pattern(input_path, pattern)
 
     generate_columns(files, input_path_name, output_folder)
 
