@@ -5,6 +5,8 @@ from typing import List, Any
 
 import numpy as numpy
 
+from .utils import search_files
+
 
 def validate_parameters(tag_name: str) -> bool:
     print("INFO: Validating parameters")
@@ -15,17 +17,7 @@ def validate_parameters(tag_name: str) -> bool:
 def walk_directories(input_path: Path, label: str, dimension: int) -> None:
     print("INFO: Browsing through directories to fill in")
 
-    files = []
-    for item in input_path.glob("*"):
-        if item.is_dir() and not item.name.startswith('.'):
-            for element in item.iterdir():
-                if element.is_file():
-                    files.append(element)
-        elif item.is_file() and not item.name.startswith('.'):
-            files.append(item)
-        else:
-            continue
-
+    files = search_files(input_path)
     fill_files(files, label, dimension)
 
 

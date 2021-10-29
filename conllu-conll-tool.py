@@ -4,8 +4,8 @@
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 
-from modules import column_remover, columns_swapper, remove_pos
-from modules import combiner, splitter, converter, cleaner, filler, embeddings_generator, calculate_ttest, columns_generator
+from modules import column_inserter, columns_generator, column_remover, columns_swapper, remove_pos
+from modules import combiner, splitter, converter, cleaner, filler, embeddings_generator, calculate_ttest
 
 
 def main() -> None:
@@ -64,16 +64,23 @@ def main() -> None:
     subparser.add_argument('--gold_b', type=str, required=True, help="Folder with the original CoNLL test files for the parser B")
     subparser.add_argument('--predicted_b', type=str, required=True, help="Folder with CoNLL test files predicted by a model of parser B")
     # Swap
-    subparser = subparsers.add_parser('swap', help='Swap the position of two given columns.')
+    subparser = subparsers.add_parser('swap', help='Swaps the position of two given columns.')
     subparser.add_argument('--input', type=str, required=True, help=input_help)
     subparser.add_argument('--output', type=str, required=True, help=output_help)
     subparser.add_argument('--from_position', type=int, required=True, help='Column to be swapped, starting from number zero.')
     subparser.add_argument('--to_position', type=int, required=True, help='Column to swap with, starting from number zero.')
     # Remove column
-    subparser = subparsers.add_parser('remove-column', help='Remove the column at the given position, starting from number zero.')
+    subparser = subparsers.add_parser('remove-column', help='Deletes the column at the given position, starting from number zero.')
     subparser.add_argument('--input', type=str, required=True, help=input_help)
     subparser.add_argument('--output', type=str, required=True, help=output_help)
     subparser.add_argument('--position', type=int, required=True, help='Column to be removed, starting from number zero.')
+    # Add column
+    subparser = subparsers.add_parser('add-column', help='Adds the column at the given position, starting from number zero, with the '
+                                                         'specified content.')
+    subparser.add_argument('--input', type=str, required=True, help=input_help)
+    subparser.add_argument('--output', type=str, required=True, help=output_help)
+    subparser.add_argument('--position', type=int, required=True, help='Column to be added, starting from number zero.')
+    subparser.add_argument('--content', type=str, required=True, help='Content of the column to be added.')
 
     arguments = parser.parse_args()
     if arguments.command:
@@ -140,6 +147,12 @@ def process_arguments(arguments: Namespace) -> None:
         output_folder = arguments.output
         position = arguments.position
         remove_column_handler(base_path, input_folder, output_folder, position)
+    elif command == "add-column":
+        input_folder = arguments.input
+        output_folder = arguments.output
+        position = arguments.position
+        content = arguments.content
+        add_column_handler(base_path, input_folder, output_folder, position, content)
     else:
         print(f"Error: Command {command} is not recognised")
 
@@ -258,6 +271,16 @@ def remove_column_handler(base_path: str, input_folder: str, output_folder: str,
 
     if input_path.is_dir() and output_path.is_dir():
         column_remover.walk_directories(input_path, output_path, position)
+    else:
+        print(FOLDERS_ERROR_MESSAGE)
+
+
+def add_column_handler(base_path: str, input_folder: str, output_folder: str, position: int, content: str) -> None:
+    input_path = Path(base_path).joinpath(input_folder)
+    output_path = Path(base_path).joinpath(output_folder)
+
+    if input_path.is_dir() and output_path.is_dir():
+        column_inserter.walk_directories(input_path, output_path, position, content)
     else:
         print(FOLDERS_ERROR_MESSAGE)
 
