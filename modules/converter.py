@@ -40,10 +40,13 @@ def convert_file(input_file, output_file) -> None:
     with open(input_file, 'rt', encoding='UTF-8', errors="replace") as conllu, open(output_file, 'wt', encoding='UTF-8',
                                                                                     errors="replace") as conll:
         for line in conllu:
-            if line != "\n":
-                tuples = line.split("\t")
-                if len(tuples) == 10 and tuples[0] != '#' and '.' not in tuples[0] and '-' not in tuples[0]:
-                    tuples[8] = tuples[9] = '_'
-                    conll.write('\t'.join(tuples) + '\n')
+            if not line.startswith("# sent_id =") and not line.startswith("# text ="):
+                if line != "\n":
+                    tuples = line.split("\t")
+                    if len(tuples) == 10 and tuples[0] != '#' and '.' not in tuples[0] and '-' not in tuples[0]:
+                        tuples[8] = tuples[9] = '_'
+                        conll.write('\t'.join(tuples) + '\n')
+                else:
+                    conll.write('\n')
             else:
-                conll.write('\n')
+                conll.write(line)

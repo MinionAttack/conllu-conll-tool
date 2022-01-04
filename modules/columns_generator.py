@@ -34,18 +34,21 @@ def generate(file: Path, output_file: Path) -> None:
     with open(file, 'rt', encoding='UTF-8', errors="replace") as actual_file, open(output_file, 'wt', encoding='UTF-8',
                                                                                    errors="replace") as new_file:
         for line in actual_file:
-            if line != "\n":
-                line = line.replace("\n", "")
-                tuples = line.split("\t")
-                if len(tuples) < 10:
-                    columns_to_generate = 10 - len(tuples)
-                    expand_line(tuples, columns_to_generate)
-                    new_line = '\t'.join(tuples) + '\n'
-                    new_file.write(new_line)
+            if not line.startswith("# sent_id =") and not line.startswith("# text ="):
+                if line != "\n":
+                    line = line.replace("\n", "")
+                    tuples = line.split("\t")
+                    if len(tuples) < 10:
+                        columns_to_generate = 10 - len(tuples)
+                        expand_line(tuples, columns_to_generate)
+                        new_line = '\t'.join(tuples) + '\n'
+                        new_file.write(new_line)
+                    else:
+                        new_file.write(line)
                 else:
-                    new_file.write(line)
+                    new_file.write('\n')
             else:
-                new_file.write('\n')
+                new_file.write(line)
 
 
 def expand_line(tuples: List[str], columns_to_generate: int) -> None:
