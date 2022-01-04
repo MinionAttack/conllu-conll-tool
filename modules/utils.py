@@ -22,6 +22,7 @@ def search_files_pattern(input_folder: Path, pattern: str) -> List[Path]:
 
 def search_files(input_path: Path) -> List[Path]:
     files = []
+
     for item in input_path.glob("*"):
         if item.is_dir() and not item.name.startswith('.'):
             for element in item.iterdir():
@@ -32,4 +33,4 @@ def search_files(input_path: Path) -> List[Path]:
         else:
             continue
 
-        return files
+    return files
