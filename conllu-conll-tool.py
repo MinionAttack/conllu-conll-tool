@@ -4,7 +4,7 @@
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 
-from modules import column_inserter, columns_generator, column_remover, columns_swapper, remove_pos
+from modules import column_inserter, columns_generator, column_remover, columns_swapper, empty_nodes, remove_pos, ud_enhancer
 from modules import combiner, splitter, converter, cleaner, filler, embeddings_generator, calculate_ttest
 
 
@@ -81,6 +81,17 @@ def main() -> None:
     subparser.add_argument('--output', type=str, required=True, help=output_help)
     subparser.add_argument('--position', type=int, required=True, help='Column to be added, starting from number zero.')
     subparser.add_argument('--content', type=str, required=True, help='Content of the column to be added.')
+    # Remove empty nodes
+    subparser = subparsers.add_parser('empty-nodes', help='Remove sentences containing empty nodes in XX.1 format which can cause '
+                                                          'problems with some parsers.')
+    subparser.add_argument('--input', type=str, required=True, help=input_help)
+    subparser.add_argument('--output', type=str, required=True, help=output_help)
+    # Enhanced Universal Dependencies
+    subparser = subparsers.add_parser('enhanced-ud', help='Converts a file without EUD annotation to a file with EUD annotation. This is '
+                                                          'done by filling column 8 with the contents of column 6 and 7 separated by a '
+                                                          'colon.')
+    subparser.add_argument('--input', type=str, required=True, help=input_help)
+    subparser.add_argument('--output', type=str, required=True, help=output_help)
 
     arguments = parser.parse_args()
     if arguments.command:
@@ -153,6 +164,14 @@ def process_arguments(arguments: Namespace) -> None:
         position = arguments.position
         content = arguments.content
         add_column_handler(base_path, input_folder, output_folder, position, content)
+    elif command == "empty-nodes":
+        input_folder = arguments.input
+        output_folder = arguments.output
+        empty_nodes_handler(base_path, input_folder, output_folder)
+    elif command == "enhanced-ud":
+        input_folder = arguments.input
+        output_folder = arguments.output
+        enhanced_ud_handler(base_path, input_folder, output_folder)
     else:
         print(f"Error: Command {command} is not recognised")
 
@@ -281,6 +300,26 @@ def add_column_handler(base_path: str, input_folder: str, output_folder: str, po
 
     if input_path.is_dir() and output_path.is_dir():
         column_inserter.walk_directories(input_path, output_path, position, content)
+    else:
+        print(FOLDERS_ERROR_MESSAGE)
+
+
+def empty_nodes_handler(base_path, input_folder, output_folder) -> None:
+    input_path = Path(base_path).joinpath(input_folder)
+    output_path = Path(base_path).joinpath(output_folder)
+
+    if input_path.is_dir() and output_path.is_dir():
+        empty_nodes.walk_directories(input_path, output_path)
+    else:
+        print(FOLDERS_ERROR_MESSAGE)
+
+
+def enhanced_ud_handler(base_path, input_folder, output_folder) -> None:
+    input_path = Path(base_path).joinpath(input_folder)
+    output_path = Path(base_path).joinpath(output_folder)
+
+    if input_path.is_dir() and output_path.is_dir():
+        ud_enhancer.walk_directories(input_path, output_path)
     else:
         print(FOLDERS_ERROR_MESSAGE)
 

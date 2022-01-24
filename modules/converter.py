@@ -34,13 +34,13 @@ def convert_files(files: List[Path], input_path_name: str, output_path: Path) ->
             convert_file(file, output_file)
 
 
-def convert_file(input_file, output_file) -> None:
+def convert_file(input_file: Path, output_file: Path) -> None:
     print(f"INFO: Converting {input_file} file to {output_file} file")
 
     with open(input_file, 'rt', encoding='UTF-8', errors="replace") as conllu, open(output_file, 'wt', encoding='UTF-8',
                                                                                     errors="replace") as conll:
         for line in conllu:
-            if not line.startswith("# sent_id =") and not line.startswith("# text ="):
+            if not line.startswith("#"):
                 if line != "\n":
                     tuples = line.split("\t")
                     if len(tuples) == 10 and tuples[0] != '#' and '.' not in tuples[0] and '-' not in tuples[0]:
