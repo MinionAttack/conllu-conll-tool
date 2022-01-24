@@ -34,7 +34,7 @@ def remove(file: Path, position: int, output_file: Path) -> None:
     with open(file, 'rt', encoding='UTF-8', errors="replace") as actual_file, open(output_file, 'wt', encoding='UTF-8',
                                                                                    errors="replace") as new_file:
         for line in actual_file:
-            if not line.startswith("# sent_id =") and not line.startswith("# text ="):
+            if not line.startswith("#"):
                 if line != "\n":
                     line = line.replace("\n", "")
                     tuples = line.split("\t")

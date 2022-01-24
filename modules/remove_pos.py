@@ -21,7 +21,7 @@ def remove_pos_column(files: List[Path], output_path: Path) -> None:
         output_file = Path(output_path).joinpath(filename)
         with open(file, 'rt', encoding='UTF-8') as pos_file, open(output_file, 'wt', encoding='UTF-8') as no_pos_file:
             for line in pos_file:
-                if not line.startswith("# sent_id =") and not line.startswith("# text ="):
+                if not line.startswith("#"):
                     if line != "\n":
                         tuples = line.split("\t")
                         if len(tuples) == 10 and tuples[0] != '#' and '.' not in tuples[0] and '-' not in tuples[0]:

@@ -13,7 +13,7 @@ Table of contents.
 
 This is a tool to convert *CoNLL-U* format files to *CoNLL* format files and manipulate training, validation and test sets.
 
-This script has twelve features:
+This script has fourteen features:
 
 1. Convert files in *CoNLL-U* format to *CoNLL* format.
 2. Combine several files of a given training phase into one file.
@@ -29,6 +29,9 @@ This script has twelve features:
 10. Swaps the position of two given columns.
 11. Deletes the column at the given position, starting from the number zero.
 12. Adds the column at the given position, starting from number zero, with the specified content.
+13. Remove sentences containing empty nodes in *XX.1* format which can cause problems with some parsers.
+14. Converts a file without *Enhanced UD* annotation to a file with *Enhanced UD* annotation. This is done by filling column 8 with the
+    contents of column 6 and 7 separated by a colon.
 
 **It is important to note that the script uses the _output_ folder as the base directory for both input and output files in some features.**
 
@@ -46,7 +49,7 @@ This will show the usage:
 
 ```
 usage: conllu-conll-tool.py [-h]
-                            {convert,combine,split,clean,fill,generate,columns,remove-pos,ttest,swap,remove-column,add-column}
+                            {convert,combine,split,clean,fill,generate,columns,remove-pos,ttest,swap,remove-column,add-column,empty-nodes,enhanced-ud}
                             ...
 
 Convert CoNLL-U files to CoNLL files
@@ -55,7 +58,7 @@ optional arguments:
   -h, --help            show this help message and exit
 
 Commands:
-  {convert,combine,split,clean,fill,generate,columns,remove-pos,ttest,swap,remove-column,add-column}
+  {convert,combine,split,clean,fill,generate,columns,remove-pos,ttest,swap,remove-column,add-column,empty-nodes,enhanced-ud}
     convert             Convert from CoNLL-U format to CoNLL format.
     combine             Combine multiple files from one phase (train,
                         validation or test) into one file.
@@ -81,6 +84,11 @@ Commands:
                         from number zero.
     add-column          Adds the column at the given position, starting from
                         number zero, with the specified content.
+    empty-nodes         Remove sentences containing empty nodes in XX.1 format
+                        which can cause problems with some parsers.
+    enhanced-ud         Converts a file without EUD annotation to a file with
+                        EUD annotation. This is done by filling column 8 with
+                        the contents of column 6 and 7 separated by a colon.
 ```
 
 If you want to know how to use a specific command, for example the *clean* command, type:
@@ -244,6 +252,26 @@ Run the script again.
 - **output**: Directory (must have been created) within the *output* folder where the *CoNLL-U* files with the added column will be created.
 - **position**: Column to be added, starting from number zero.
 - **content**: Content of the column to be added.
+
+### 13. Remove empty nodes
+
+`$ ./conllu-conll-tool.py empty-nodes --input empty_nodes --output no_empty_nodes`
+
+- **input**: Directory (must have been created) within the *output* folder where the *CoNLL-U* files are located to add the column.
+    - You can put the files directly or if you want to add a column to several languages you can put the files in different folders
+      (one for each language), but be aware that the script does not process more than one level of subdirectories.
+- **output**: Directory (must have been created) within the *output* folder where the *CoNLL-U* files with the deleted empty nodes will be
+  created.
+
+### 14. Fill in the Enhanced UD column
+
+`$ ./conllu-conll-tool.py enhanced-ud --input no_enhanced --output enhanced`
+
+- **input**: Directory (must have been created) within the *output* folder where the *CoNLL-U* files are located to add the column.
+    - You can put the files directly or if you want to add a column to several languages you can put the files in different folders
+      (one for each language), but be aware that the script does not process more than one level of subdirectories.
+- **output**: Directory (must have been created) within the *output* folder where the *CoNLL-U* files will be created with the EUD column
+  filled in.
 
 ## Licensing agreement
 
