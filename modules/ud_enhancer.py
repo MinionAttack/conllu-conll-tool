@@ -43,8 +43,11 @@ def enhance(input_file: Path, output_file: Path, keep_content: bool) -> None:
                 if line != "\n":
                     line = line.replace("\n", "")
                     tuples = line.split("\t")
-                    if not keep_content:
-                        tuples[8] = f"{tuples[6]}:{tuples[7]}"
+                    if tuples[8] != "_" and keep_content:
+                        content = tuples[8]
+                    else:
+                        content = f"{tuples[6]}:{tuples[7]}"
+                    tuples[8] = content
                     new_line = '\t'.join(tuples) + '\n'
                     new_file.write(new_line)
                 else:
