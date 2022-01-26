@@ -265,8 +265,9 @@ Run the script again.
 
 ### 14. Fill in the Enhanced UD column
 
-`$ ./conllu-conll-tool.py enhanced-ud --input no_enhanced --output enhanced`
+`$ ./conllu-conll-tool.py enhanced-ud [--keep] --input no_enhanced --output enhanced`
 
+- **keep**: Indicates that if the column already contains a value other than `_`, keep it.
 - **input**: Directory (must have been created) within the *output* folder where the *CoNLL-U* files are located to add the column.
     - You can put the files directly or if you want to add a column to several languages you can put the files in different folders
       (one for each language), but be aware that the script does not process more than one level of subdirectories.
