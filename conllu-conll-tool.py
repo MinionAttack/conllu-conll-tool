@@ -90,6 +90,7 @@ def main() -> None:
     subparser = subparsers.add_parser('enhanced-ud', help='Converts a file without EUD annotation to a file with EUD annotation. This is '
                                                           'done by filling column 8 with the contents of column 6 and 7 separated by a '
                                                           'colon.')
+    subparser.add_argument('--keep', action='store_true', help='If the column already contains a value, keep it.')
     subparser.add_argument('--input', type=str, required=True, help=input_help)
     subparser.add_argument('--output', type=str, required=True, help=output_help)
 
@@ -169,9 +170,10 @@ def process_arguments(arguments: Namespace) -> None:
         output_folder = arguments.output
         empty_nodes_handler(base_path, input_folder, output_folder)
     elif command == "enhanced-ud":
+        keep_content = arguments.keep
         input_folder = arguments.input
         output_folder = arguments.output
-        enhanced_ud_handler(base_path, input_folder, output_folder)
+        enhanced_ud_handler(base_path, keep_content, input_folder, output_folder)
     else:
         print(f"Error: Command {command} is not recognised")
 
@@ -304,7 +306,7 @@ def add_column_handler(base_path: str, input_folder: str, output_folder: str, po
         print(FOLDERS_ERROR_MESSAGE)
 
 
-def empty_nodes_handler(base_path, input_folder, output_folder) -> None:
+def empty_nodes_handler(base_path: str, input_folder: str, output_folder: str) -> None:
     input_path = Path(base_path).joinpath(input_folder)
     output_path = Path(base_path).joinpath(output_folder)
 
@@ -314,12 +316,12 @@ def empty_nodes_handler(base_path, input_folder, output_folder) -> None:
         print(FOLDERS_ERROR_MESSAGE)
 
 
-def enhanced_ud_handler(base_path, input_folder, output_folder) -> None:
+def enhanced_ud_handler(base_path: str, keep_content: bool, input_folder: str, output_folder: str) -> None:
     input_path = Path(base_path).joinpath(input_folder)
     output_path = Path(base_path).joinpath(output_folder)
 
     if input_path.is_dir() and output_path.is_dir():
-        ud_enhancer.walk_directories(input_path, output_path)
+        ud_enhancer.walk_directories(input_path, output_path, keep_content)
     else:
         print(FOLDERS_ERROR_MESSAGE)
 

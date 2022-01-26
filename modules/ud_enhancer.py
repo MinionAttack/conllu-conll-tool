@@ -7,15 +7,15 @@ from typing import List
 from modules.utils import search_files
 
 
-def walk_directories(input_path: Path, output_path: Path) -> None:
+def walk_directories(input_path: Path, output_path: Path, keep_content: bool) -> None:
     print("INFO: Browsing through directories to convert")
 
     input_path_name = input_path.name
     files = search_files(input_path)
-    fill_enhanced_column(files, input_path_name, output_path)
+    fill_enhanced_column(files, input_path_name, output_path, keep_content)
 
 
-def fill_enhanced_column(files: List[Path], input_path_name: str, output_path: Path) -> None:
+def fill_enhanced_column(files: List[Path], input_path_name: str, output_path: Path, keep_content: bool) -> None:
     print("INFO: Enhancing files")
 
     pattern = '\\-(train|test|dev)\\.conllu$'
@@ -30,10 +30,10 @@ def fill_enhanced_column(files: List[Path], input_path_name: str, output_path: P
                 output_file = file_folder.joinpath(name)
             else:
                 output_file = output_path.joinpath(name)
-            enhance(file, output_file)
+            enhance(file, output_file, keep_content)
 
 
-def enhance(input_file: Path, output_file: Path) -> None:
+def enhance(input_file: Path, output_file: Path, keep_content: bool) -> None:
     print(f"INFO: Enhancing sentences from {input_file} file to {output_file} file")
 
     with open(input_file, 'rt', encoding='UTF-8', errors="replace") as actual_file, open(output_file, 'wt', encoding='UTF-8',
@@ -43,7 +43,8 @@ def enhance(input_file: Path, output_file: Path) -> None:
                 if line != "\n":
                     line = line.replace("\n", "")
                     tuples = line.split("\t")
-                    tuples[8] = f"{tuples[6]}:{tuples[7]}"
+                    if not keep_content:
+                        tuples[8] = f"{tuples[6]}:{tuples[7]}"
                     new_line = '\t'.join(tuples) + '\n'
                     new_file.write(new_line)
                 else:
