@@ -3,6 +3,7 @@
 
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
+from typing import Any
 
 from modules import column_inserter, columns_generator, column_remover, columns_swapper, empty_nodes, remove_pos, ud_enhancer
 from modules import combiner, splitter, converter, cleaner, filler, embeddings_generator, calculate_ttest
@@ -41,6 +42,7 @@ def main() -> None:
     subparser.add_argument('--input', type=str, required=True, help=input_help)
     subparser.add_argument('--label', type=str, required=True, help='Name of the label to be inserted')
     subparser.add_argument('--dimension', type=int, required=True, help=dimension_help)
+    subparser.add_argument('--position', type=int, help='Indicates the position in which to insert the label')
     # Generate
     subparser = subparsers.add_parser('generate', help='Generates a random embeddings file with the specified dimension from the '
                                                        'training and validation file.')
@@ -128,7 +130,8 @@ def process_arguments(arguments: Namespace) -> None:
         input_folder = arguments.input
         label = arguments.label
         dimension = arguments.dimension
-        filler_handler(base_path, input_folder, label, dimension)
+        position = arguments.position
+        filler_handler(base_path, input_folder, label, dimension, position)
     elif command == "generate":
         input_folder = arguments.input
         output_folder = arguments.output
@@ -222,12 +225,12 @@ def cleaner_handler(base_path: str, input_folder: str, output_folder: str) -> No
         print(FOLDERS_ERROR_MESSAGE)
 
 
-def filler_handler(base_path: str, input_folder: str, label: str, dimension: int) -> None:
+def filler_handler(base_path: str, input_folder: str, label: str, dimension: int, position: Any) -> None:
     input_path = Path(base_path).joinpath(input_folder)
 
     if input_path.is_dir():
         if filler.validate_parameters(label):
-            filler.walk_directories(input_path, label, dimension)
+            filler.walk_directories(input_path, label, dimension, position)
         else:
             print("Error: The label may only contain letters")
     else:
