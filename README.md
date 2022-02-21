@@ -19,8 +19,8 @@ This script has fourteen features:
 2. Combine several files of a given training phase into one file.
 3. Split a training phase file into two files, one file for the training phase and one file for the validation phase.
 4. Clean up an embeddings file to remove the first line containing the number of words and the size of the vector.
-5. Add a tag with random values for a specific dimension for unknown words in the embedding file. A fixed seed is used to be able to
-   reproduce the experiments.
+5. Adds a label with random values for a specific dimension to the unknown words in the embedding file, either at a specific position or at
+   the end of the file. A fixed seed is used to be able to reproduce the experiments.
 6. Generate an embedding file with the words from the training file and the validation file with random values for a specific dimension. A
    fixed seed is used to be able to reproduce the experiments.
 7. Adds the required number of columns to the end of each line of a *CoNLL* file to match the *CoNLL-U* format of 10 tab-separated columns.
@@ -164,7 +164,8 @@ Run the script again.
       language), but be aware that the script does not process more than one level of subdirectories.
 - **label**: Name of the tag to attach to the embeddings file.
 - **dimension**: The vector dimensions for the tag.
-- **position** (Optional): Indicates the position where the label is to be inserted, starts with the index at 1 and not 0.
+- **position** (Optional): Indicates the position where the tag should be inserted, start with the index at 1 and not at 0, otherwise the
+  tag is added to the end of the file
 
 ### 6. Generate files
 
