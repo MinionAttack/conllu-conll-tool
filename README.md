@@ -157,13 +157,14 @@ Run the script again.
 
 ### 5. Fill in files
 
-`$ ./conllu-conll-tool.py fill --input embeddings --label unk --dimension 100`
+`$ ./conllu-conll-tool.py fill --input embeddings --label unk --dimension 100 [--position 500]`
 
 - **input**: Directory (must have been created) within the *output* folder where the embedding files to be filled in are located.
     - You can put the files directly or if you want to fill in several languages you can put the files in different folders (one for each  
       language), but be aware that the script does not process more than one level of subdirectories.
 - **label**: Name of the tag to attach to the embeddings file.
 - **dimension**: The vector dimensions for the tag.
+- **position** (Optional): Indicates the position where the label is to be inserted, starts with the index at 1 and not 0.
 
 ### 6. Generate files
 
