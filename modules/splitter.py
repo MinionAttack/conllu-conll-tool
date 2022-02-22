@@ -6,6 +6,8 @@ from random import sample
 from re import search
 from typing import List, Tuple
 
+from modules.utils import get_blocks_file
+
 
 def walk_directories(input_path: Path, output_path: Path) -> None:
     print("INFO: Browsing through directories to split")
@@ -58,30 +60,13 @@ def split_training_files(files: List[Path], input_path_name: str, output_path: P
 def split_file(training_file: Path, new_training_file: Path, validation_file: Path) -> None:
     print(f"INFO: Splitting {training_file} file")
 
-    blocks = read_training_file(training_file)
+    blocks = get_blocks_file(training_file)
     training_collection, validation_collection = select_random_blocks(blocks)
     write_split_data(new_training_file, training_collection)
     write_split_data(validation_file, validation_collection)
 
 
-def read_training_file(training_file: Path) -> List[str]:
-    print(f"INFO: Reading {training_file} file")
-
-    blocks = []
-    block = ""
-    with open(training_file, 'rt', encoding='UTF-8', errors="replace") as original:
-        for line in original:
-            if line == "\n":
-                block += "\n"
-                blocks.append(block)
-                block = ""
-            else:
-                block += line
-
-    return blocks
-
-
-def select_random_blocks(blocks) -> Tuple[List[str], List[str]]:
+def select_random_blocks(blocks: List[str]) -> Tuple[List[str], List[str]]:
     print(f"INFO: Selecting random data")
 
     # The file is divided into a ratio of 80% training and 20% validation

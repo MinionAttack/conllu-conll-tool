@@ -3,10 +3,10 @@
 
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
-from typing import Any
+from typing import Any, List
 
 from modules import column_inserter, columns_generator, column_remover, columns_swapper, empty_nodes, remove_pos, ud_enhancer
-from modules import combiner, splitter, converter, cleaner, filler, embeddings_generator, calculate_ttest
+from modules import combiner, splitter, converter, cleaner, filler, embeddings_generator, calculate_ttest, extractor
 
 
 def main() -> None:
@@ -95,6 +95,11 @@ def main() -> None:
     subparser.add_argument('--keep', action='store_true', help='If the column already contains a value, keep it.')
     subparser.add_argument('--input', type=str, required=True, help=input_help)
     subparser.add_argument('--output', type=str, required=True, help=output_help)
+    # Extract
+    subparser = subparsers.add_parser('extract', help='Extracts the indicated percentage of phrases into a new file.')
+    subparser.add_argument('--input', type=str, required=True, help=input_help)
+    subparser.add_argument('--output', type=str, required=True, help=output_help)
+    subparser.add_argument('--percentages', type=int, nargs='+', required=True, help="Percentage of sentences to be extracted")
 
     arguments = parser.parse_args()
     if arguments.command:
@@ -177,6 +182,11 @@ def process_arguments(arguments: Namespace) -> None:
         input_folder = arguments.input
         output_folder = arguments.output
         enhanced_ud_handler(base_path, keep_content, input_folder, output_folder)
+    elif command == "extract":
+        input_folder = arguments.input
+        output_folder = arguments.output
+        percentages = arguments.percentages
+        extract_handler(base_path, input_folder, output_folder, percentages)
     else:
         print(f"Error: Command {command} is not recognised")
 
@@ -325,6 +335,16 @@ def enhanced_ud_handler(base_path: str, keep_content: bool, input_folder: str, o
 
     if input_path.is_dir() and output_path.is_dir():
         ud_enhancer.walk_directories(input_path, output_path, keep_content)
+    else:
+        print(FOLDERS_ERROR_MESSAGE)
+
+
+def extract_handler(base_path: str, input_folder: str, output_folder: str, percentages: List[int]) -> None:
+    input_path = Path(base_path).joinpath(input_folder)
+    output_path = Path(base_path).joinpath(output_folder)
+
+    if input_path.is_dir() and output_path.is_dir():
+        extractor.walk_directories(input_path, output_path, percentages)
     else:
         print(FOLDERS_ERROR_MESSAGE)
 
