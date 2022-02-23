@@ -78,7 +78,7 @@ def select_random_blocks(blocks: List[str]) -> Tuple[List[str], List[str]]:
         training_collection = sample(blocks, number_training_items)
         validation_collection = [block for block in blocks if block not in training_collection]
     except ValueError:
-        print(f"WARNING: The file does not contain enough sentences to do a 80-20 splitting, skipping")
+        print(f"WARNING: The file does not contain enough sentences to make an 80-20 split, skipping")
         training_collection = []
         validation_collection = []
 
