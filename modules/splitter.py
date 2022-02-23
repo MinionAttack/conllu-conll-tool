@@ -74,8 +74,13 @@ def select_random_blocks(blocks: List[str]) -> Tuple[List[str], List[str]]:
     context = getcontext()
     context.rounding = ROUND_HALF_UP
     number_training_items = int(round(Decimal(0.8 * total_blocks), 0))
-    training_collection = sample(blocks, number_training_items)
-    validation_collection = [block for block in blocks if block not in training_collection]
+    try:
+        training_collection = sample(blocks, number_training_items)
+        validation_collection = [block for block in blocks if block not in training_collection]
+    except ValueError:
+        print(f"WARNING: The file does not contain enough sentences to make an 80-20 split, skipping")
+        training_collection = []
+        validation_collection = []
 
     return training_collection, validation_collection
 
