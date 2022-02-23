@@ -62,8 +62,9 @@ def split_file(training_file: Path, new_training_file: Path, validation_file: Pa
 
     blocks = get_blocks_file(training_file)
     training_collection, validation_collection = select_random_blocks(blocks)
-    write_split_data(new_training_file, training_collection)
-    write_split_data(validation_file, validation_collection)
+    if training_collection and validation_collection:
+        write_split_data(new_training_file, training_collection)
+        write_split_data(validation_file, validation_collection)
 
 
 def select_random_blocks(blocks: List[str]) -> Tuple[List[str], List[str]]:
